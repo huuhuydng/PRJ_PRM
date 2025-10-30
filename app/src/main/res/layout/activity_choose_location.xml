@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ChooseLocationActivity">
 
     <TextView
@@ -14,6 +15,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:text="Choose Your Location "
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <com.google.android.material.textfield.TextInputLayout
@@ -30,12 +32,14 @@
          app:endIconDrawable="@drawable/arrow_down"
         app:endIconTint="@color/black"
         app:layout_constraintTop_toBottomOf="@+id/textView9">
+
         <AutoCompleteTextView
+            android:id="@+id/listOfLocation"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/listOfLocation"
             android:inputType="none"
-            android:text="Choose Location"/>
+            android:text="Choose Location"
+            android:textColor="@color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -46,6 +50,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
         android:text="To provide you with the best dining experience, we need your permission to access your device's location. By enabling location services, we can offer personalized restaurant recommendations, accurate delivery estimates, and ensure a seamless food delivery experience.&quot;"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
