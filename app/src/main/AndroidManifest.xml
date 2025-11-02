@@ -12,9 +12,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WavesOfFood">
         <activity
-            android:name=".ChooseLocationActivity"
-            android:exported="true" >
-        </activity>
+            android:name=".PendingOrderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OutForDeliveryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AllItemActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddItemActivity"
+            android:exported="false" />
         <activity
             android:name=".SignActivity"
             android:exported="false" />
@@ -25,11 +39,10 @@
             android:name=".StartActivity"
             android:exported="false" />
         <activity
-            android:name=".Splash_Screen"
-            android:exported="false">
-        </activity>
-        <activity
             android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Splash_Screen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

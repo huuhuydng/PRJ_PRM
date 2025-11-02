@@ -4,4 +4,5 @@
     <string name="get_started">Get Started</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="default_web_client_id">748411023289-dri82cshiak6936pha35tgasrksgpoq1.apps.googleusercontent.com</string>
 </resources>
