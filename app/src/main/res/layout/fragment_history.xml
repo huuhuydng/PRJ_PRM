@@ -37,6 +37,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView16">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/recentbuyitem"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -47,25 +48,25 @@
                     android:layout_marginEnd="32dp"
                     app:cardBackgroundColor="#4CAF50"
                     app:cardCornerRadius="20dp"
-                    app:layout_constraintBottom_toTopOf="@+id/receivedButton"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                 </androidx.cardview.widget.CardView>
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/receivedButton"
-                    android:layout_width="60dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/addtocartshape"
-                    android:text="Received"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/orderStatus"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="@+id/orderStatus"
-                    app:layout_constraintTop_toBottomOf="@+id/orderStatus" />
+<!--                <androidx.appcompat.widget.AppCompatButton-->
+<!--                    android:id="@+id/receivedButton"-->
+<!--                    android:layout_width="60dp"-->
+<!--                    android:layout_height="20dp"-->
+<!--                    android:background="@drawable/addtocartshape"-->
+<!--                    android:text="Received"-->
+<!--                    android:textAllCaps="false"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="@+id/orderStatus"-->
+<!--                    app:layout_constraintHorizontal_bias="0.5"-->
+<!--                    app:layout_constraintStart_toStartOf="@+id/orderStatus"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/orderStatus" />-->
 
 
                 <ImageView
@@ -98,8 +99,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
                     android:text="300.000 VND"
-                    android:textSize="16sp"
                     android:textColor="@color/endColor"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/buyAgainFoodName"
                     app:layout_constraintTop_toBottomOf="@+id/buyAgainFoodName" />

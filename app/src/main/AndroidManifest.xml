@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WavesOfFood">
         <activity
+            android:name=".RecentOrderItems"
+            android:exported="false"
+            android:label="@string/title_activity_recent_order_items"
+            android:theme="@style/Theme.WavesOfFood" />
+        <activity
             android:name=".DetailsActivity"
             android:exported="false" />
         <activity

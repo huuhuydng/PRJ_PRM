@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <ImageButton
-            android:id="@+id/button7"
+            android:id="@+id/backButton"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginStart="8dp"
@@ -62,6 +62,7 @@
                 android:textColor="@color/black" />
 
             <EditText
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
@@ -70,7 +71,6 @@
                 android:ems="10"
                 android:fontFamily="serif"
                 android:inputType="text"
-                android:text="Name"
                 android:textColor="@color/black" />
         </LinearLayout>
 
@@ -97,6 +97,7 @@
                 android:textColor="@color/black" />
 
             <EditText
+                android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -104,11 +105,10 @@
                 android:layout_marginBottom="5dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:ems="10"
 
+                android:ems="10"
                 android:fontFamily="serif"
                 android:inputType="textMultiLine"
-                android:text="1234 Mockingbird Lane Anytown, CA 90210"
                 android:textColor="@color/black" />
         </LinearLayout>
 
@@ -135,6 +135,7 @@
                 android:textColor="@color/black" />
 
             <EditText
+                android:id="@+id/phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
@@ -143,7 +144,6 @@
                 android:ems="10"
                 android:fontFamily="serif"
                 android:inputType="text"
-                android:text="1234567890"
                 android:textColor="@color/black" />
         </LinearLayout>
 
@@ -202,6 +202,7 @@
                 android:textColor="@color/black" />
 
             <EditText
+                android:id="@+id/totalAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
@@ -212,7 +213,6 @@
                 android:gravity="end"
                 android:inputType="none"
                 android:paddingEnd="32dp"
-                android:text="3.200.000 VND"
                 android:textColor="@color/startColor"
                 android:textSize="20sp" />
         </LinearLayout>

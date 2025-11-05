@@ -13,6 +13,15 @@
         android:orientation="vertical"
         android:layout_height="wrap_content">
 
+        <Button
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/textColor"
+            android:text="Edit Profile" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -35,6 +44,7 @@
                 android:textSize="20sp" />
 
             <EditText
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
@@ -43,7 +53,6 @@
                 android:ems="10"
                 android:fontFamily="serif"
                 android:inputType="text"
-                android:text="Admin"
                 android:textColor="@color/black" />
         </LinearLayout>
 
@@ -69,6 +78,7 @@
                 android:textSize="20sp" />
 
             <EditText
+                android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -79,7 +89,6 @@
                 android:ems="10"
                 android:fontFamily="serif"
                 android:inputType="textMultiLine"
-                android:text="1234 Mockingbird Lane Anytown, CA 90210"
                 android:textColor="@color/black" />
         </LinearLayout>
 
@@ -105,6 +114,7 @@
                 android:textSize="20sp" />
 
             <EditText
+                android:id="@+id/email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
@@ -113,7 +123,6 @@
                 android:ems="10"
                 android:fontFamily="serif"
                 android:inputType="textEmailAddress"
-                android:text="admin@gmail.com"
                 android:textColor="@color/black" />
         </LinearLayout>
 
@@ -140,6 +149,7 @@
                 android:textSize="20sp" />
 
             <EditText
+                android:id="@+id/phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
@@ -148,13 +158,12 @@
                 android:ems="10"
                 android:fontFamily="serif"
                 android:inputType="phone"
-                android:text="1234567890"
                 android:textColor="@color/black" />
         </LinearLayout>
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button5"
+        android:id="@+id/saveInforButton"
         android:elevation="5dp"
         android:background="@drawable/proceedbutonshape"
         android:layout_width="match_parent"
