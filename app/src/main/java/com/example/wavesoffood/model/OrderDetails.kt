@@ -5,7 +5,7 @@ import android.os.Parcelable
 import java.io.Serializable
 
 
-class OrderDetails(): Serializable {
+class OrderDetails(): Parcelable {
     var userUid: String? = null
     var username: String? = null
     var foodNames: MutableList<String>? = null
@@ -20,9 +20,13 @@ class OrderDetails(): Serializable {
     var itemPushKey: String? = null
     var currentTime: Long = 0
 
-    constructor(parcel: Parcel): this() {
+    constructor(parcel: Parcel) : this() {
         userUid = parcel.readString()
         username = parcel.readString()
+        foodNames = parcel.createStringArrayList()
+        foodPrices = parcel.createStringArrayList()
+        foodImages = parcel.createStringArrayList()
+        foodQuantities = parcel.createIntArray()?.toMutableList()
         address = parcel.readString()
         totalPrice = parcel.readString()
         phoneNumber = parcel.readString()
@@ -30,8 +34,8 @@ class OrderDetails(): Serializable {
         paymentReceived = parcel.readByte() != 0.toByte()
         itemPushKey = parcel.readString()
         currentTime = parcel.readLong()
-
     }
+
 
     constructor(
         userUid: String,
@@ -63,19 +67,24 @@ class OrderDetails(): Serializable {
         this.paymentReceived = paymentReceived
     }
 
-     fun writeToParcel (parcel: Parcel, flags: Int) {
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(userUid)
-        parcel.writeString (username)
+        parcel.writeString(username)
+        parcel.writeStringList(foodNames)
+        parcel.writeStringList(foodPrices)
+        parcel.writeStringList(foodImages)
+        parcel.writeIntArray(foodQuantities?.toIntArray())
         parcel.writeString(address)
-        parcel.writeString (totalPrice)
+        parcel.writeString(totalPrice)
         parcel.writeString(phoneNumber)
         parcel.writeByte(if (orderAccepted) 1 else 0)
         parcel.writeByte(if (paymentReceived) 1 else 0)
         parcel.writeString(itemPushKey)
-        parcel.writeLong (currentTime)
+        parcel.writeLong(currentTime)
     }
 
-     fun describeContents(): Int {
+
+    override fun describeContents(): Int {
         return 0
     }
 

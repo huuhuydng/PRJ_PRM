@@ -115,7 +115,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:fontFamily="sans-serif-condensed-medium"
-            android:text="Recent Buy"
+            android:text="Previously Buy"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardView" />

@@ -55,6 +55,10 @@ class PayOutActivity : AppCompatActivity() {
         foodItemIngredient = intent.getStringArrayListExtra("FoodItemIngredient") as ArrayList<String>
         foodItemQuantities = intent.getIntegerArrayListExtra("FoodItemQuantities") as ArrayList<Int>
 
+        Log.d("DEBUG_PAYOUT", "foodImages = $foodItemImage")
+        Log.d("DEBUG_PAYOUT", "foodDescriptions = $foodItemDescription")
+
+
         totalAmount = calculateTotalAmount().toString() +"$"
 //        binding.totalAmount.isEnabled = false
         binding.backButton.setOnClickListener {
@@ -167,8 +171,3 @@ class PayOutActivity : AppCompatActivity() {
 
     }
 }
-
-
-
-
-

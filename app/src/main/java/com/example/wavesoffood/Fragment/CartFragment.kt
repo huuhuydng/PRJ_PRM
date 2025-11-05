@@ -47,9 +47,6 @@ class CartFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         reteriveCartItems()
 
-
-
-
         binding.proceedButton.setOnClickListener {
             // get order items details before proceeding to check out
             getOrderedItemDetails()
@@ -93,8 +90,8 @@ class CartFragment : Fragment() {
     private fun oderNow(
         foodName: MutableList<String>,
         foodPrice: MutableList<String>,
-        foodDescription: MutableList<String>,
         foodImage: MutableList<String>,
+        foodDescription: MutableList<String>,
         foodIngredient: MutableList<String>,
         foodQuantities: MutableList<Int>
     ) {
@@ -107,10 +104,6 @@ class CartFragment : Fragment() {
             intent.putExtra("FoodItemIngredient", foodIngredient as ArrayList<String>)
             intent.putExtra("FoodItemQuantities", foodQuantities as ArrayList<Int>)
             startActivity(intent)
-
-
-
-
         }
     }
 
@@ -174,5 +167,3 @@ class CartFragment : Fragment() {
     companion object {
     }
 }
-
-

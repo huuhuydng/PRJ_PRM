@@ -40,7 +40,7 @@ class HistoryFragment : Fragment() {
     ): View? {
         binding = FragmentHistoryBinding.inflate(layoutInflater, container, false)
         //Inflate the layout for this fragment
-auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         database= FirebaseDatabase.getInstance()
         // retrieve and display the user order history
         retrieveBuyHistory()
@@ -58,7 +58,7 @@ auth = FirebaseAuth.getInstance()
     private fun seeItemsRecentBuy() {
         listOfOrderItem.firstOrNull()?.let { recentBuy ->
             val intent = Intent(requireContext(), RecentOrderItems::class.java)
-            intent.putExtra("RecentBuyOrderItem", listOfOrderItem)
+            intent.putParcelableArrayListExtra("RecentBuyOrderItem", listOfOrderItem)
             startActivity(intent)
         }
     }
@@ -67,8 +67,10 @@ auth = FirebaseAuth.getInstance()
         binding.recentbuyitem.visibility= View.INVISIBLE
         userId = auth.currentUser?.uid ?: ""
 
-        val buyItemReference : DatabaseReference = database.reference.child("user").child(userId).child("BuyHistory")
-        val shortingQuery = buyItemReference.orderByChild("currentTime")
+        val buyItemReference : DatabaseReference =
+            database.reference.child("user").child(userId).child("BuyHistory")
+        val shortingQuery =
+            buyItemReference.orderByChild("currentTime")
 
         shortingQuery.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -101,16 +103,10 @@ auth = FirebaseAuth.getInstance()
         recentOrderItem?.let {
             with(binding){
                 buyAgainFoodName.text = it.foodNames?.firstOrNull() ?: ""
-                buyAgainFoodPrice.text = it.totalPrice ?: ""
+                buyAgainFoodPrice.text = it.foodPrices?.firstOrNull() ?: " "
                 val image = it.foodImages?.firstOrNull()?:""
                 val uri = Uri.parse(image)
                 Glide.with(requireContext()).load(uri).into(buyAgainFoodImage)
-
-                listOfOrderItem.reverse()
-                if (listOfOrderItem.isNotEmpty()){
-
-
-                }
             }
         }
     }
