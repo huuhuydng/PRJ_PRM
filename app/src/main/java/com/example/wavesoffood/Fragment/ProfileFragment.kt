@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.wavesoffood.R
-import com.example.wavesoffood.databinding.CartItemBinding
 import com.example.wavesoffood.databinding.FragmentProfileBinding
 import com.example.wavesoffood.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
@@ -16,49 +15,33 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProfileFragment : Fragment() {
-    private lateinit var  binding: FragmentProfileBinding
+    private lateinit var binding: FragmentProfileBinding
     private val auth = FirebaseAuth.getInstance()
     private val database = FirebaseDatabase.getInstance()
-
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    private var isEditMode = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentProfileBinding.inflate(inflater,container,false)
+    ): View {
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         setUserData()
-        binding.apply {
-            name.isEnabled= false
-            email.isEnabled=  false
-            address.isEnabled=  false
-            phone.isEnabled=  false
-            binding.editButton.setOnClickListener {
-                Toast.makeText(requireContext(),"Edit Profile",Toast.LENGTH_SHORT).show()
-                name.isEnabled= !name.isEnabled
-                email.isEnabled= !email.isEnabled
-                address.isEnabled= !address.isEnabled
-                phone.isEnabled= !phone.isEnabled
+        setEditMode(false) // Initial state: disabled and faded
 
-
-
+        binding.editButton.setOnClickListener {
+            isEditMode = !isEditMode
+            setEditMode(isEditMode)
+            if(isEditMode){
+                Toast.makeText(requireContext(), "You can now edit your profile", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Editing disabled", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -67,65 +50,71 @@ class ProfileFragment : Fragment() {
             val email = binding.email.text.toString()
             val address = binding.address.text.toString()
             val phone = binding.phone.text.toString()
-
-            updateUserData(name,email,address,phone)
-
+            updateUserData(name, email, address, phone)
         }
-        return binding.root
     }
 
-    private fun ProfileFragment.updateUserData(
+    private fun setEditMode(enabled: Boolean) {
+        val alpha = if (enabled) 1.0f else 0.5f
+        binding.apply {
+            name.isEnabled = enabled
+            address.isEnabled = enabled
+            email.isEnabled = enabled
+            phone.isEnabled = enabled
+
+            nameContainer.alpha = alpha
+            addressContainer.alpha = alpha
+            emailContainer.alpha = alpha
+            phoneContainer.alpha = alpha
+        }
+    }
+
+    private fun updateUserData(
         name: String,
         email: String,
         address: String,
         phone: String
     ) {
         val userId = auth.currentUser?.uid
-        if (userId != null){
-
+        if (userId != null) {
             val userReference = database.getReference("user").child(userId)
-            val userData = hashMapOf("name" to name,
+            val userData = hashMapOf(
+                "name" to name,
                 "address" to address,
                 "email" to email,
-                "phone" to phone)
+                "phone" to phone
+            )
             userReference.setValue(userData).addOnSuccessListener {
-                Toast.makeText(requireContext(),"Profile Update successfully😊",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Profile updated successfully😊", Toast.LENGTH_SHORT).show()
+                isEditMode = false
+                setEditMode(false) // Disable fields after saving
             }.addOnFailureListener {
-                Toast.makeText(requireContext(),"Profile update failed😭",Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Profile update failed😭", Toast.LENGTH_SHORT).show()
             }
-
         }
     }
 
     private fun setUserData() {
-        val userId= auth.currentUser?.uid
-        if (userId!=null) {
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
             val userReference = database.getReference("user").child(userId)
-            userReference.addListenerForSingleValueEvent(object  :ValueEventListener{
+            userReference.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.exists()){
+                    if (snapshot.exists()) {
                         val userProfile = snapshot.getValue(UserModel::class.java)
-                        if (userProfile != null){
+                        if (userProfile != null) {
                             binding.name.setText(userProfile.name)
                             binding.address.setText(userProfile.address)
                             binding.email.setText(userProfile.email)
                             binding.phone.setText(userProfile.phone)
-
                         }
-
                     }
-
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
+                    Toast.makeText(requireContext(), "Failed to load user data.", Toast.LENGTH_SHORT).show()
                 }
-
             })
-
         }
     }
-
 }
-
-
