@@ -54,19 +54,19 @@
 
                 </androidx.cardview.widget.CardView>
 
-<!--                <androidx.appcompat.widget.AppCompatButton-->
-<!--                    android:id="@+id/receivedButton"-->
-<!--                    android:layout_width="60dp"-->
-<!--                    android:layout_height="20dp"-->
-<!--                    android:background="@drawable/addtocartshape"-->
-<!--                    android:text="Received"-->
-<!--                    android:textAllCaps="false"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="@+id/orderStatus"-->
-<!--                    app:layout_constraintHorizontal_bias="0.5"-->
-<!--                    app:layout_constraintStart_toStartOf="@+id/orderStatus"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/orderStatus" />-->
+                <!--                <androidx.appcompat.widget.AppCompatButton-->
+                <!--                    android:id="@+id/receivedButton"-->
+                <!--                    android:layout_width="60dp"-->
+                <!--                    android:layout_height="20dp"-->
+                <!--                    android:background="@drawable/addtocartshape"-->
+                <!--                    android:text="Received"-->
+                <!--                    android:textAllCaps="false"-->
+                <!--                    android:textColor="@color/white"-->
+                <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--                    app:layout_constraintEnd_toEndOf="@+id/orderStatus"-->
+                <!--                    app:layout_constraintHorizontal_bias="0.5"-->
+                <!--                    app:layout_constraintStart_toStartOf="@+id/orderStatus"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@+id/orderStatus" />-->
 
 
                 <ImageView

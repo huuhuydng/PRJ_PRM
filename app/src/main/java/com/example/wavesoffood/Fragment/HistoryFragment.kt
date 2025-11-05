@@ -92,7 +92,7 @@ class HistoryFragment : Fragment() {
                 TODO("Not yet implemented")
             }
         }
-)
+        )
 
 
 

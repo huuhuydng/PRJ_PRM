@@ -143,7 +143,7 @@ class CartFragment : Fragment() {
             }
 
             private fun setAdapter() {
-                 cartAdapter = CartAdapter(
+                cartAdapter = CartAdapter(
                     requireContext(),
                     foodNames,
                     foodPrices,

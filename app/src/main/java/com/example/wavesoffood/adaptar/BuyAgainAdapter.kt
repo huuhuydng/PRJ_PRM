@@ -11,7 +11,7 @@ import com.example.wavesoffood.databinding.BuyAgainItemBinding
 class BuyAgainAdapter(private val buyAgainFoodName: MutableList<String>,
                       private val buyAgainFoodPrice: MutableList<String>,
                       private val buyAgainFoodImage: MutableList<String>
-                    , private var requireContext: Context
+                      , private var requireContext: Context
 ) :RecyclerView.Adapter<BuyAgainAdapter.BuyAgainViewHolder>() {
 
 

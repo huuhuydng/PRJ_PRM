@@ -135,7 +135,7 @@ class PayOutActivity : AppCompatActivity() {
 
         }
         return totalAmount
-        }
+    }
 
     private fun setUserData(){
         val user = auth.currentUser
@@ -156,7 +156,7 @@ class PayOutActivity : AppCompatActivity() {
                             phone.setText(phones)
                         }
 
-                        }
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {

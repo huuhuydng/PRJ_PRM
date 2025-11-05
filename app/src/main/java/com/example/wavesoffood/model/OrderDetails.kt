@@ -2,7 +2,6 @@ package com.example.wavesoffood.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import java.io.Serializable
 
 
 class OrderDetails(): Parcelable {

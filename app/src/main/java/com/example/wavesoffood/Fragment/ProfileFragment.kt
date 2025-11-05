@@ -50,8 +50,8 @@ class ProfileFragment : Fragment() {
             email.isEnabled=  false
             address.isEnabled=  false
             phone.isEnabled=  false
-        binding.editButton.setOnClickListener {
-            Toast.makeText(requireContext(),"Edit Profile",Toast.LENGTH_SHORT).show()
+            binding.editButton.setOnClickListener {
+                Toast.makeText(requireContext(),"Edit Profile",Toast.LENGTH_SHORT).show()
                 name.isEnabled= !name.isEnabled
                 email.isEnabled= !email.isEnabled
                 address.isEnabled= !address.isEnabled

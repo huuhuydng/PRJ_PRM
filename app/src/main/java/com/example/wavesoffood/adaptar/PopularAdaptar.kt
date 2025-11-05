@@ -12,7 +12,7 @@ import com.example.wavesoffood.databinding.PopularItemBinding
 class PopularAdaptar(private val items: List<String>, private val image:List<Int>, private val price: List<String>, private val requireContext: Context) : RecyclerView.Adapter<PopularAdaptar.PopularViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularViewHolder{
-       return PopularViewHolder(
+        return PopularViewHolder(
             PopularItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -41,12 +41,12 @@ class PopularAdaptar(private val items: List<String>, private val image:List<Int
 
     class PopularViewHolder(val binding: PopularItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-            private val imagesView = binding.foodImage
-            fun bind(item: String,price:String, images: Int) {
-                binding.foodNamePopular.text = item
-                binding.pricePopular.text = price
-                imagesView.setImageResource(images)
-            }
+        private val imagesView = binding.foodImage
+        fun bind(item: String,price:String, images: Int) {
+            binding.foodNamePopular.text = item
+            binding.pricePopular.text = price
+            imagesView.setImageResource(images)
+        }
 
     }
 }
