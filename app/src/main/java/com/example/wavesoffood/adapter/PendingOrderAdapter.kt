@@ -1,18 +1,24 @@
 package com.example.wavesoffood.adapter
 
 import android.content.Context
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.wavesoffood.databinding.PendingOrdersBinding
 
 class PendingOrderAdapter(
-    private val customerNames: ArrayList<String>,
-    private val quantity: ArrayList<String>,
-    private val foodImage: ArrayList<Int>,
-    private val context: Context
+    private val context: Context,
+    private val customerNames: MutableList<String>,
+    private val quantity: MutableList<String>,
+    private val foodImage: MutableList<String>,
+    private val itemClicked: OnItemClicked,
 ) : RecyclerView.Adapter<PendingOrderAdapter.PendingOrderViewHolder>() {
+    interface OnItemClicked {
+        fun onItemClickListener(position: Int)
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PendingOrderViewHolder {
         val binding =
             PendingOrdersBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -32,7 +38,9 @@ class PendingOrderAdapter(
             binding.apply {
                 customerName.text = customerNames[position]
                 pendingOrderQuantity.text = quantity[position]
-                orderFoodImage.setImageResource(foodImage[position])
+                var uriString = foodImage[position]
+                var uri = Uri.parse(uriString)
+                Glide.with(context).load(uri).into(orderedFoodImage)
 
                 orderedAcceptButton.apply {
                     if (!isAccepted) {
@@ -51,6 +59,9 @@ class PendingOrderAdapter(
                             showToast("Order is dispatched")
                         }
                     }
+                }
+                itemView.setOnClickListener {
+                    itemClicked.onItemClickListener(position)
                 }
             }
         }
