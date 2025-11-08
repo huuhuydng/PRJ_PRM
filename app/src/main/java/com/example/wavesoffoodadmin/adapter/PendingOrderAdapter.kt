@@ -57,10 +57,11 @@ class PendingOrderAdapter(
                             showToast("Order is accepted")
                             itemClicked.onItemAcceptClickListener(position)
                         } else {
-                            customerNames.removeAt(adapterPosition)
-                            notifyItemRemoved(adapterPosition)
-                            showToast("Order is dispatched")
-                            itemClicked.onItemClickListener(position)
+                            // Dispatch order - Firebase listener will handle removal automatically
+                            // Don't remove locally to avoid conflicts with real-time updates
+                            showToast("Dispatching order...")
+                            // Call the correct dispatch function!
+                            itemClicked.onItemDispatchClickListener(position)
                         }
                     }
                 }

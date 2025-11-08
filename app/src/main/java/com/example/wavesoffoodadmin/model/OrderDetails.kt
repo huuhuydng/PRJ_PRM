@@ -37,11 +37,19 @@ class OrderDetails() : Serializable {
     }
 
     fun describeContents(): Int {
-        TODO("Not yet implemented")
+        return 0
     }
 
     fun writeToParcel(dest: Parcel, flags: Int) {
-        TODO("Not yet implemented")
+        dest.writeString(userUid)
+        dest.writeString(userName)
+        dest.writeString(address)
+        dest.writeString(totalPrice)
+        dest.writeString(phoneNumber)
+        dest.writeByte(if (orderAccepted) 1 else 0)
+        dest.writeByte(if (paymentReceived) 1 else 0)
+        dest.writeString(itemPushKey)
+        dest.writeLong(currentTime)
     }
 
     companion object CREATOR : Parcelable.Creator<OrderDetails> {

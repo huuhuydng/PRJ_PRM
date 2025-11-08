@@ -116,7 +116,7 @@ class LoginActivity : AppCompatActivity() {
         email = binding.emailAddress.text.toString().trim()
         password = binding.password.text.toString().trim()
 
-        val user = UserModel(userName, email, password)
+        val user = UserModel(name = userName, email = email, password = password)
         val userId: String = FirebaseAuth.getInstance().currentUser!!.uid
 
         userId?.let{

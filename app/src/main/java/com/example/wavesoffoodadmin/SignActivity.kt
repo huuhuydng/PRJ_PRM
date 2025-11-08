@@ -106,7 +106,7 @@ class SignActivity : AppCompatActivity() {
         email = binding.emailAddress.text.toString().trim()
         password = binding.password.text.toString().trim()
 
-        val user = UserModel(username, email, password)
+        val user = UserModel(name = username, email = email, password = password)
         val userId: String = FirebaseAuth.getInstance().currentUser!!.uid
         //save data to Firebase
         database.child("user").child(userId).setValue(user)

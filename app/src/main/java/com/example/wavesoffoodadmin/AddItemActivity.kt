@@ -125,15 +125,16 @@ class AddItemActivity : AppCompatActivity() {
         val menuRef: DatabaseReference = database.getReference("menu")
         val newKeyItem: String? = menuRef.push().key
 
-        val newItem = AllMenu(
-            foodName = foodName,
-            foodPrice = foodPrice,
-            foodDescription = foodDescription,
-            foodIngredient = foodIngredient,
-            foodImage = imageUrl
-        )
-
         newKeyItem?.let { key ->
+            val newItem = AllMenu(
+                foodName = foodName,
+                foodPrice = foodPrice,
+                foodDescription = foodDescription,
+                foodIngredient = foodIngredient,
+                foodImage = imageUrl,
+                key = key  // Save Firebase key for deletion
+            )
+            
             menuRef.child(key).setValue(newItem).addOnSuccessListener {
                 runOnUiThread {
                     Toast.makeText(this, "Item added successfully", Toast.LENGTH_SHORT).show()

@@ -5,5 +5,6 @@ data class AllMenu(
     val foodPrice :String? = null,
     val foodDescription :String? = null,
     val foodImage :String? = null,
-    val foodIngredient :String? = null
+    val foodIngredient :String? = null,
+    var key: String? = null  // Firebase push key for deletion
 )

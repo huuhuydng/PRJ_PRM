@@ -204,25 +204,57 @@ class PendingOrderActivity : AppCompatActivity(), PendingOrderAdapter.OnItemClic
  
     override fun onItemDispatchClickListener(position: Int) {
         // handle item dispatch and update database
-        val dispatchItemPushKey = listOfOrderItem[position].itemPushKey
-        val dispatchItemOrderReference = database.reference.child("CompleteOrder").child(dispatchItemPushKey!!)
-        dispatchItemOrderReference.setValue(listOfOrderItem[position])
+        val order = listOfOrderItem[position]
+        val dispatchItemPushKey = order.itemPushKey
+        val customerName = order.userName ?: order.phoneNumber ?: "Customer"
+        val orderPrice = order.totalPrice ?: "0$"
+        
+        Log.d(TAG, "onItemDispatchClickListener: Dispatching order at position $position")
+        Log.d(TAG, "Dispatching order: $customerName, Price: $orderPrice, Key: $dispatchItemPushKey")
+        
+        if (dispatchItemPushKey == null) {
+            Log.e(TAG, "❌ Cannot dispatch: order key is null")
+            Toast.makeText(this, "Error: Order key is missing", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        // Step 1: Copy to CompleteOrder
+        val dispatchItemOrderReference = database.reference.child("CompleteOrder").child(dispatchItemPushKey)
+        dispatchItemOrderReference.setValue(order)
             .addOnSuccessListener {
-                deleteThisItemFromOrderDetails(dispatchItemPushKey)
+                Log.d(TAG, "✅ Order copied to CompleteOrder successfully")
+                // Step 2: Delete from OrderDetails
+                deleteThisItemFromOrderDetails(dispatchItemPushKey, orderPrice)
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "❌ Failed to copy order to CompleteOrder: ${e.message}")
+                Toast.makeText(this, "Failed to dispatch order: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
-    private fun deleteThisItemFromOrderDetails(dispatchItemPushKey: String) {
+    private fun deleteThisItemFromOrderDetails(dispatchItemPushKey: String, orderPrice: String) {
+        Log.d(TAG, "deleteThisItemFromOrderDetails: Removing from OrderDetails, Price: $orderPrice")
+        
         val orderDetailsItemsReference = database.reference.child("OrderDetails").child(dispatchItemPushKey)
         orderDetailsItemsReference.removeValue()
             .addOnSuccessListener {
-                Toast.makeText(this, "Order Is Dispatched", Toast.LENGTH_SHORT).show()
-
+                Log.d(TAG, "✅ Order removed from OrderDetails")
+                Log.d(TAG, "📊 Dashboard will auto-update:")
+                Log.d(TAG, "   - Pending Orders: -1")
+                Log.d(TAG, "   - Completed Orders: +1")
+                Log.d(TAG, "   - Total Earnings: +$orderPrice")
+                
+                // Show informative toast with earnings
+                Toast.makeText(
+                    this,
+                    "Order dispatched! Earnings: +$orderPrice",
+                    Toast.LENGTH_LONG
+                ).show()
             }
-            .addOnFailureListener {
-                Toast.makeText(this, "Order Is Not Dispatched", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { e ->
+                Log.e(TAG, "❌ Failed to remove order from OrderDetails: ${e.message}")
+                Toast.makeText(this, "Order dispatch failed: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-
     }
     private fun updateOrderAcceptedStatus(position: Int)
     {

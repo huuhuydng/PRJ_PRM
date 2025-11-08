@@ -46,6 +46,8 @@ class AllItemActivity : AppCompatActivity() {
                 for (foodSnapshot in snapshot.children) {
                     val menuItem = foodSnapshot.getValue(AllMenu::class.java)
                     menuItem?.let {
+                        // Save Firebase key for deletion
+                        it.key = foodSnapshot.key
                         menuItems.add(it)
                     }
                 }
