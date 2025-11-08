@@ -166,20 +166,39 @@
         </LinearLayout>
     </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/saveInforButton"
-        android:elevation="5dp"
-        android:background="@drawable/proceedbutonshape"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginBottom="32dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        android:textAllCaps="false"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:textColor="@color/startColor"
-        android:textSize="20sp"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:text="Save Information" />
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="32dp"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/saveInforButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/proceedbutonshape"
+            android:elevation="5dp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="Save Information"
+            android:textAllCaps="false"
+            android:textColor="@color/startColor"
+            android:textSize="20sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/logoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/profileedittextshape"
+            android:elevation="3dp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="Logout"
+            android:textAllCaps="false"
+            android:textColor="@color/error"
+            android:textSize="18sp" />
+    </LinearLayout>
 
 </FrameLayout>

@@ -52,6 +52,23 @@ class ProfileFragment : Fragment() {
             val phone = binding.phone.text.toString()
             updateUserData(name, email, address, phone)
         }
+        
+        binding.logoutButton.setOnClickListener {
+            logoutUser()
+        }
+    }
+    
+    private fun logoutUser() {
+        // Show confirmation
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Yes") { _, _ ->
+                // Call MainActivity's logout function
+                (activity as? com.example.wavesoffood.MainActivity)?.logoutUser()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun setEditMode(enabled: Boolean) {

@@ -48,8 +48,8 @@ class OrderDetails(): Parcelable {
         phone: String,
         time: Long,
         itemPushKey: String?,
-        b: Boolean,
-        b2: Boolean
+        orderAccepted: Boolean,
+        paymentReceived: Boolean
     ): this(){
         this.userUid = userUid
         this.username = name
