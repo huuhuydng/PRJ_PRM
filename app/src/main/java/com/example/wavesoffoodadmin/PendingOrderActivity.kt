@@ -2,6 +2,8 @@ package com.example.wavesoffoodadmin
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,11 +27,18 @@ class PendingOrderActivity : AppCompatActivity(), PendingOrderAdapter.OnItemClic
     private var listOfOrderItem : ArrayList<OrderDetails> = arrayListOf()
     private lateinit var database: FirebaseDatabase
     private lateinit var databaseOrderDetails: DatabaseReference
+    private var orderListener: ValueEventListener? = null
 
+    companion object {
+        private const val TAG = "PendingOrderActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        
+        Log.d(TAG, "onCreate: Activity started")
+        
         //Initialization of database
         database = FirebaseDatabase.getInstance()
         //Initialization of databaseReference
@@ -43,41 +52,136 @@ class PendingOrderActivity : AppCompatActivity(), PendingOrderAdapter.OnItemClic
     }
 
     private fun getOrdersDetails() {
-        //Retrieve order details from Firebase database
-        databaseOrderDetails.addListenerForSingleValueEvent(object: ValueEventListener{
+        Log.d(TAG, "getOrdersDetails: Fetching orders from Firebase...")
+        
+        //Retrieve order details from Firebase database with REAL-TIME updates
+        orderListener = databaseOrderDetails.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d(TAG, "onDataChange: Snapshot exists: ${snapshot.exists()}")
+                Log.d(TAG, "onDataChange: Children count: ${snapshot.childrenCount}")
+                
+                // Clear existing data before adding new
+                listOfOrderItem.clear()
+                listOfName.clear()
+                listOfToTalPrice.clear()
+                listOfImageFirstFoodOrder.clear()
+                
+                if (!snapshot.exists()) {
+                    Log.w(TAG, "onDataChange: No orders found in OrderDetails")
+                    showEmptyState()
+                    return
+                }
+                
                 for(orderSnapshot in snapshot.children){
                     val orderDetails = orderSnapshot.getValue(OrderDetails::class.java)
+                    
+                    // Log detailed order info for debugging
+                    Log.d(TAG, "=== Order Details ===")
+                    Log.d(TAG, "Key: ${orderSnapshot.key}")
+                    Log.d(TAG, "userName: ${orderDetails?.userName}")
+                    Log.d(TAG, "userUid: ${orderDetails?.userUid}")
+                    Log.d(TAG, "totalPrice: ${orderDetails?.totalPrice}")
+                    Log.d(TAG, "phoneNumber: ${orderDetails?.phoneNumber}")
+                    Log.d(TAG, "address: ${orderDetails?.address}")
+                    Log.d(TAG, "Raw data: ${orderSnapshot.value}")
+                    
                     orderDetails?.let {
                         listOfOrderItem.add(it)
                     }
                 }
 
-                addDataToListForRecyclerView()
+                if (listOfOrderItem.isEmpty()) {
+                    showEmptyState()
+                } else {
+                    hideEmptyState()
+                    addDataToListForRecyclerView()
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.e(TAG, "onCancelled: Database error: ${error.message}", error.toException())
+                Toast.makeText(
+                    this@PendingOrderActivity,
+                    "Failed to load orders: ${error.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+                showEmptyState()
             }
         })
     }
+    
+    private fun showEmptyState() {
+        Log.d(TAG, "showEmptyState: Showing empty state")
+        Toast.makeText(this, "No pending orders at the moment", Toast.LENGTH_SHORT).show()
+        // You can add an empty state view here if you have one in your layout
+    }
+    
+    private fun hideEmptyState() {
+        // Hide empty state view if you have one
+    }
 
     private fun addDataToListForRecyclerView() {
+        Log.d(TAG, "addDataToListForRecyclerView: Processing ${listOfOrderItem.size} orders")
+        
         for(orderItem in listOfOrderItem){
-            //Add data to respective list of populating the recycler view
-            orderItem.userName?.let { listOfName.add(it) }
-            orderItem.totalPrice?.let { listOfToTalPrice.add(it) }
+            // Add customer name with fallback options
+            val customerName = when {
+                !orderItem.userName.isNullOrBlank() -> {
+                    Log.d(TAG, "Using userName: ${orderItem.userName}")
+                    orderItem.userName!!
+                }
+                !orderItem.phoneNumber.isNullOrBlank() -> {
+                    Log.d(TAG, "Using phoneNumber as name: ${orderItem.phoneNumber}")
+                    orderItem.phoneNumber!!
+                }
+                !orderItem.userUid.isNullOrBlank() -> {
+                    Log.d(TAG, "Using userUid as name: ${orderItem.userUid}")
+                    "Customer ${orderItem.userUid?.take(8)}"
+                }
+                else -> {
+                    Log.w(TAG, "No customer identifier found, using default")
+                    "Unknown Customer"
+                }
+            }
+            listOfName.add(customerName)
+            Log.d(TAG, "Added customer: $customerName")
+            
+            // Add total price
+            val price = orderItem.totalPrice ?: "0$"
+            listOfToTalPrice.add(price)
+            Log.d(TAG, "Added price: $price")
+            
+            // Add food images
             orderItem.foodImages?.filterNot { it.isEmpty() }?.forEach {
                 listOfImageFirstFoodOrder.add(it)
             }
         }
-        setAdpater()
+        
+        Log.d(TAG, "Lists size - Names: ${listOfName.size}, Prices: ${listOfToTalPrice.size}, Images: ${listOfImageFirstFoodOrder.size}")
+        
+        if (listOfName.isEmpty()) {
+            Log.e(TAG, "⚠️ WARNING: No customer names found!")
+            showEmptyState()
+        } else {
+            setAdpater()
+        }
     }
 
     private fun setAdpater() {
+        Log.d(TAG, "setAdapter: Setting up RecyclerView adapter")
         binding.pendingOrderRecyclerView.layoutManager = LinearLayoutManager(this)
         val adapter = PendingOrderAdapter(this, listOfName, listOfToTalPrice, listOfImageFirstFoodOrder, this)
         binding.pendingOrderRecyclerView.adapter = adapter
+        Log.d(TAG, "setAdapter: Adapter set with ${listOfName.size} items")
+    }
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        // Remove listener to prevent memory leaks
+        orderListener?.let {
+            databaseOrderDetails.removeEventListener(it)
+        }
+        Log.d(TAG, "onDestroy: Listener removed")
     }
 
     override fun onItemClickListener(position: Int){

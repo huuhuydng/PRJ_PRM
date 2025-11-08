@@ -2,11 +2,16 @@ package com.example.wavesoffoodadmin.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.firebase.database.PropertyName
 import java.io.Serializable
 
 class OrderDetails() : Serializable {
     var userUid: String? = null
+    
+    // Map "username" from Firebase to "userName" property in code
+    @PropertyName("username")
     var userName: String? = null
+    
     var foodNames: MutableList<String>? = null
     var foodImages: MutableList<String>? = null
     var foodPrices: MutableList<String>? = null
