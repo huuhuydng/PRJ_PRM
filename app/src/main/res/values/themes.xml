@@ -1,9 +1,81 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme with Material 3 -->
     <style name="Base.Theme.WavesOfFood" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/text_on_primary</item>
+        
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_dark</item>
+        <item name="colorOnSecondary">@color/white</item>
+        
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        
+        <!-- Error color -->
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/white</item>
+        
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        
+        <!-- Navigation bar -->
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        
+        <!-- Shape appearance -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.WavesOfFood.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.WavesOfFood.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.WavesOfFood.LargeComponent</item>
+        
+        <!-- Material Card -->
+        <item name="materialCardViewStyle">@style/Widget.WavesOfFood.CardView</item>
+        
+        <!-- Button styles -->
+        <item name="materialButtonStyle">@style/Widget.WavesOfFood.Button</item>
+        
+        <!-- Text appearance -->
+        <item name="textAppearanceHeadline1">@style/TextAppearance.WavesOfFood.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.WavesOfFood.Headline2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.WavesOfFood.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.WavesOfFood.Body2</item>
     </style>
 
     <style name="Theme.WavesOfFood" parent="Base.Theme.WavesOfFood" />
+    
+    <!-- Shape Appearances -->
+    <style name="ShapeAppearance.WavesOfFood.SmallComponent" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/button_corner_radius</item>
+    </style>
+    
+    <style name="ShapeAppearance.WavesOfFood.MediumComponent" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/card_corner_radius</item>
+    </style>
+    
+    <style name="ShapeAppearance.WavesOfFood.LargeComponent" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+    
+    <!-- Card View Style -->
+    <style name="Widget.WavesOfFood.CardView" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="cardBackgroundColor">@color/surface</item>
+    </style>
+    
+    <!-- Button Style -->
+    <style name="Widget.WavesOfFood.Button" parent="Widget.Material3.Button">
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
+        <item name="android:textSize">@dimen/text_size_body</item>
+        <item name="android:textColor">@color/text_on_primary</item>
+        <item name="backgroundTint">@color/primary</item>
+    </style>
 </resources>

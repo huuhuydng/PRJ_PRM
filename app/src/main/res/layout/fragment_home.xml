@@ -4,68 +4,75 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:padding="16dp"
+    android:background="@color/background"
+    android:padding="@dimen/spacing_medium"
     tools:context=".Fragment.HomeFragment">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardView2"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="5dp"
-        app:cardCornerRadius="15dp"
+        android:layout_height="220dp"
+        app:cardBackgroundColor="@color/surface"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="@dimen/card_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/border_color"
+        app:strokeWidth="0dp">
 
         <com.denzcoskun.imageslider.ImageSlider
             android:id="@+id/image_slider"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:iss_auto_cycle="true"
-            app:iss_delay="2000"
-            app:iss_no_dots="true"
-            app:iss_period="2000"
+            app:iss_delay="3000"
+            app:iss_no_dots="false"
+            app:iss_period="3000"
             app:iss_text_align="CENTER" />
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/textView11"
+        style="@style/TextView_SectionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_tiny"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:text="Popular Dishes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/viewAllMenu"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="40dp"
+        android:text="View Menu"
+        android:textAllCaps="false"
+        android:textColor="@color/primary"
+        app:backgroundTint="@color/primary_light"
+        app:cornerRadius="20dp"
+        app:icon="@drawable/arrow"
+        app:iconGravity="end"
+        app:iconSize="16dp"
+        app:iconTint="@color/primary"
+        app:layout_constraintBottom_toBottomOf="@+id/textView11"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView11" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/PopularRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        tools:listitem="@layout/popular_item"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/spacing_small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewAllMenu" />
+        app:layout_constraintTop_toBottomOf="@+id/viewAllMenu"
+        tools:listitem="@layout/popular_item" />
 
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="sans-serif-black"
-        android:text="Popular"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
-
-    <TextView
-        android:id="@+id/viewAllMenu"
-        android:layout_width="80dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/textviewshape"
-        android:elevation="5dp"
-        android:gravity="center"
-        android:text="View Menu"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

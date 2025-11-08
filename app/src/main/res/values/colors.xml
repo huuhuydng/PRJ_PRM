@@ -1,10 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Base colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="endColor">#00FF00</color>
-    <color name="startColor">#00AA00</color>
-    <color name="iconColor">#808080</color>
+    
+    <!-- Primary colors - Modern green theme for food app -->
+    <color name="primary">#2DD36F</color>
+    <color name="primary_dark">#10A44A</color>
+    <color name="primary_light">#5FEC99</color>
+    <color name="primary_variant">#1FC57A</color>
+    
+    <!-- Secondary colors - Complementary orange -->
+    <color name="secondary">#FFA726</color>
+    <color name="secondary_dark">#F57C00</color>
+    <color name="secondary_light">#FFD180</color>
+    
+    <!-- Accent color -->
+    <color name="accent">#FEAD1D</color>
+    
+    <!-- Background colors -->
+    <color name="background">#F8F9FA</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#F5F5F5</color>
+    
+    <!-- Text colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#BDBDBD</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    
+    <!-- Status colors -->
+    <color name="success">#2DD36F</color>
+    <color name="error">#EB445A</color>
+    <color name="warning">#FFC409</color>
+    <color name="info">#3880FF</color>
+    
+    <!-- Gradient colors for buttons -->
+    <color name="gradient_start">#2DD36F</color>
+    <color name="gradient_end">#1FC57A</color>
+    
+    <!-- Icon and border colors -->
+    <color name="icon_color">#9E9E9E</color>
+    <color name="icon_color_active">#2DD36F</color>
+    <color name="border_color">#E0E0E0</color>
+    
+    <!-- Legacy compatibility (keeping old names) -->
+    <color name="endColor">#2DD36F</color>
+    <color name="startColor">#1FC57A</color>
+    <color name="iconColor">#9E9E9E</color>
     <color name="textColor">#1FC57A</color>
-    <color name="arrowColor">#FEAD1D</color>
+    <color name="arrowColor">#FFA726</color>
 </resources>

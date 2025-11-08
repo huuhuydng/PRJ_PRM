@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:elevation="5dp"
+    android:background="@color/background"
+    android:fillViewport="true"
     tools:context=".LoginActivity">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/spacing_large">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="@dimen/spacing_xlarge"
+        android:contentDescription="@string/app_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,153 +27,183 @@
 
     <TextView
         android:id="@+id/textView2"
+        style="@style/TextAppearance.WavesOfFood.Headline1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-smallcaps"
+        android:layout_marginTop="@dimen/spacing_medium"
         android:text="Waves Of Food"
-        android:textColor="@color/black"
-        android:textSize="40sp"
+        android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
         android:id="@+id/textView5"
+        style="@style/TextAppearance.WavesOfFood.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:fontFamily="sans-serif-medium"
-        android:text="Deliever Favorite Food"
-        android:textColor="@color/black"
-        android:textSize="14sp"
+        android:layout_marginTop="@dimen/spacing_tiny"
+        android:text="@string/deliver_favorite_food"
         app:layout_constraintEnd_toEndOf="@+id/textView2"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/textView6"
+        style="@style/TextAppearance.WavesOfFood.Headline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="sans-serif"
-        android:text="Login To Your  Account"
-        android:textColor="@color/black"
-        android:textSize="20sp"
+        android:layout_marginTop="@dimen/spacing_xlarge"
+        android:text="Login To Your Account"
         app:layout_constraintEnd_toEndOf="@+id/textView5"
         app:layout_constraintStart_toStartOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
-    <EditText
-        android:id="@+id/editTextTextEmailAddress"
-        android:layout_width="325dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/edittextshape"
-        android:drawableLeft="@drawable/mail"
-        android:drawablePadding="15dp"
-        android:elevation="5dp"
-        android:ems="10"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/emailInputLayout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_large"
         android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:paddingLeft="15dp"
-        app:layout_constraintEnd_toEndOf="@+id/textView6"
-        app:layout_constraintStart_toStartOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:boxCornerRadiusBottomEnd="@dimen/button_corner_radius"
+        app:boxCornerRadiusBottomStart="@dimen/button_corner_radius"
+        app:boxCornerRadiusTopEnd="@dimen/button_corner_radius"
+        app:boxCornerRadiusTopStart="@dimen/button_corner_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6"
+        app:startIconDrawable="@drawable/mail"
+        app:startIconTint="@color/primary">
 
-    <EditText
-        android:id="@+id/editTextTextPassword"
-        android:layout_width="325dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/edittextshape"
-        android:drawableLeft="@drawable/lock"
-        android:drawablePadding="15dp"
-        android:elevation="5dp"
-        android:ems="10"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextTextEmailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:textSize="@dimen/text_size_body" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordInputLayout"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
         android:hint="Password"
-        android:inputType="textPassword"
-        android:paddingLeft="15dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
+        app:boxCornerRadiusBottomEnd="@dimen/button_corner_radius"
+        app:boxCornerRadiusBottomStart="@dimen/button_corner_radius"
+        app:boxCornerRadiusTopEnd="@dimen/button_corner_radius"
+        app:boxCornerRadiusTopStart="@dimen/button_corner_radius"
+        app:endIconMode="password_toggle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailInputLayout"
+        app:startIconDrawable="@drawable/lock"
+        app:startIconTint="@color/primary">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:textSize="@dimen/text_size_body" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/loginbutton"
+        style="@style/Button.Primary"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:text="Login"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordInputLayout" />
+
+    <View
+        android:id="@+id/dividerLeft"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:background="@color/border_color"
+        app:layout_constraintBottom_toBottomOf="@+id/textView7"
+        app:layout_constraintEnd_toStartOf="@+id/textView7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView7" />
 
     <TextView
         android:id="@+id/textView7"
+        style="@style/TextAppearance.WavesOfFood.Body2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Or"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+        android:layout_marginTop="@dimen/spacing_large"
+        android:paddingStart="@dimen/spacing_small"
+        android:paddingEnd="@dimen/spacing_small"
+        android:text="Or continue with"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginbutton" />
 
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-condensed"
-        android:text="Continue With"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView7"
-        app:layout_constraintStart_toStartOf="@+id/textView7"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+    <View
+        android:id="@+id/dividerRight"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/spacing_medium"
+        android:background="@color/border_color"
+        app:layout_constraintBottom_toBottomOf="@+id/textView7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView7"
+        app:layout_constraintTop_toTopOf="@+id/textView7" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button"
-        android:layout_width="152dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/whitebutton"
-        android:drawableLeft="@drawable/google"
-        android:paddingLeft="15dp"
+        style="@style/Button.Secondary"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:layout_marginEnd="@dimen/spacing_small"
         android:text="Google"
         android:textAllCaps="false"
-        android:textColor="@color/black"
+        app:icon="@drawable/google"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/spacing_small"
         app:layout_constraintEnd_toStartOf="@+id/button2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button2"
-        android:layout_width="152dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/whitebutton"
-        android:drawableLeft="@drawable/facebook"
-        android:paddingLeft="15dp"
+        style="@style/Button.Secondary"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_large"
         android:text="Facebook"
         android:textAllCaps="false"
-        android:textColor="@color/black"
+        app:icon="@drawable/facebook"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/spacing_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/loginbutton"
-        android:layout_width="152dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/greenbuttongradient"
-        android:text="LogIn"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <TextView
         android:id="@+id/donthavebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Don’t Have Account?"
-        android:textColor="@color/black"
+        android:layout_marginBottom="@dimen/spacing_large"
+        android:text="Don't Have Account?"
+        android:textColor="@color/primary"
+        android:textSize="@dimen/text_size_body"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/loginbutton"
         app:layout_constraintStart_toStartOf="@+id/loginbutton"
         app:layout_constraintTop_toBottomOf="@+id/loginbutton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -3,79 +3,101 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/white"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="0dp"
-        android:layout_height="87dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="10dp"
-        android:elevation="4dp"
-        app:cardCornerRadius="22dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_small"
+        app:cardBackgroundColor="@color/surface"
+        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:cardElevation="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/border_color"
+        app:strokeWidth="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="@dimen/spacing_medium">
 
-            <ImageView
-                android:id="@+id/foodImage"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginLeft="8dp"
-                android:scaleType="centerCrop"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/imageCard"
+                android:layout_width="@dimen/food_image_size"
+                android:layout_height="@dimen/food_image_size"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:strokeColor="@color/primary_light"
+                app:strokeWidth="2dp">
+
+                <ImageView
+                    android:id="@+id/foodImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    tools:srcCompat="@tools:sample/avatars" />
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/foodNamePopular"
-                android:layout_width="wrap_content"
+                style="@style/TextView_FoodName"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:fontFamily="sans-serif-condensed"
+                android:layout_marginStart="@dimen/spacing_medium"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="Food Name"
-                android:textColor="@color/black"
-                android:textSize="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/foodImage"
-                app:layout_constraintStart_toEndOf="@+id/foodImage"
-                app:layout_constraintTop_toTopOf="@+id/foodImage" />
+                app:layout_constraintEnd_toStartOf="@+id/pricePopular"
+                app:layout_constraintStart_toEndOf="@+id/imageCard"
+                app:layout_constraintTop_toTopOf="@+id/imageCard" />
 
             <TextView
                 android:id="@+id/pricePopular"
+                style="@style/TextView_FoodPrice"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif-light"
-                android:text="500.000 VND"
-                android:textColor="@color/endColor"
-                android:textSize="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.773"
-                app:layout_constraintStart_toEndOf="@+id/foodNamePopular"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="29dp"
+                android:layout_marginEnd="16dp"
+                android:text="50"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="@+id/addToCartPopular"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/addToCartPopular"
+                app:layout_constraintTop_toTopOf="@+id/imageCard" />
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/addToCartPopular"
-                android:layout_width="80dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/addtocartshape"
-                android:gravity="center"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginTop="@dimen/spacing_tiny"
+                android:minHeight="36dp"
+                android:paddingStart="@dimen/spacing_small"
+                android:paddingEnd="@dimen/spacing_small"
                 android:text="Add To Cart"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="@+id/pricePopular"
-                app:layout_constraintHorizontal_bias="0.508"
-                app:layout_constraintStart_toStartOf="@+id/pricePopular"
+                android:textAllCaps="false"
+                android:textColor="@color/text_on_primary"
+                android:textSize="12sp"
+                app:backgroundTint="@color/primary"
+                app:cornerRadius="18dp"
+                app:icon="@drawable/plus"
+                app:iconGravity="start"
+                app:iconSize="14dp"
+                app:iconTint="@color/text_on_primary"
+                app:layout_constraintBottom_toBottomOf="@+id/imageCard"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pricePopular" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

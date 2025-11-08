@@ -98,7 +98,6 @@ class PayOutActivity : AppCompatActivity() {
             bottomSheetDialog.show(supportFragmentManager, "Test")
             removeItemsFromCart()
             addOrderToHistory(orderDetails)
-
         }.addOnFailureListener {
             Toast.makeText(this," failed to oder",Toast.LENGTH_SHORT).show()
         }
