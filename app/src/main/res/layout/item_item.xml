@@ -8,12 +8,13 @@
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="15dp"
-        android:elevation="2dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        app:cardCornerRadius="@dimen/radius_lg"
+        app:cardElevation="@dimen/elevation_sm"
+        android:layout_marginTop="@dimen/spacing_sm"
+        android:layout_marginBottom="@dimen/spacing_sm"
+        android:layout_marginEnd="@dimen/spacing_md"
+        android:layout_marginStart="@dimen/spacing_md"
+        app:cardBackgroundColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,16 +22,15 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="@dimen/spacing_md">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                app:cardCornerRadius="15dp"
+                app:cardCornerRadius="@dimen/radius_md"
+                app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -46,11 +46,12 @@
             <TextView
                 android:id="@+id/foodNameTextView"
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="@dimen/spacing_md"
                 android:layout_height="wrap_content"
                 android:text="Spicy fresh crab"
-                android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_size_base"
+                android:fontFamily="@font/poppins_semibold"
                 app:layout_constraintStart_toEndOf="@+id/cardView9"
                 app:layout_constraintTop_toTopOf="@+id/cardView9" />
 
@@ -58,10 +59,12 @@
                 android:id="@+id/priceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/spacing_md"
+                android:layout_marginTop="@dimen/spacing_xs"
                 android:text="35$"
-                android:textColor="@color/textColor"
-                android:textSize="20sp"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/text_size_lg"
+                android:fontFamily="@font/poppins_bold"
                 app:layout_constraintBottom_toBottomOf="@+id/cardView9"
                 app:layout_constraintStart_toEndOf="@+id/cardView9" />
 
@@ -90,6 +93,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_size_base"
+                android:fontFamily="@font/poppins_semibold"
                 app:layout_constraintBottom_toBottomOf="@+id/plusButton"
                 app:layout_constraintEnd_toStartOf="@+id/plusButton"
                 app:layout_constraintTop_toTopOf="@+id/plusButton" />

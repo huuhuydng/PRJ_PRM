@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Waves of Food"
+rootProject.name = "WOF Admin"
 include(":app")

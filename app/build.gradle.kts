@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.wavesoffood"
+    namespace = "com.example.wavesoffoodadmin"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.wavesoffood"
+        applicationId = "com.example.wavesoffoodadmin"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

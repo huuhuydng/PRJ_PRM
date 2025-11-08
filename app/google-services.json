@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:748411023289:android:f2a7cd1f42f69e4ae15068",
         "android_client_info": {
-          "package_name": "com.example.wavesoffood"
+          "package_name": "com.example.wavesoffoodadmin"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "748411023289-ovpmsc6qi7mt65s0op0revkkdutgka6v.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.wavesoffood",
+            "package_name": "com.example.wavesoffoodadmin",
             "certificate_hash": "060734a5cf9683369090948a0ab4a8679635a400"
           }
         },

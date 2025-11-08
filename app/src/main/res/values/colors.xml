@@ -1,9 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Base Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="endColor">#00FF00</color>
-    <color name="startColor">#00AA00</color>
-    <color name="iconColor">#808080</color>
-    <color name="textColor">#53E88B</color>
+    
+    <!-- Primary Brand Colors -->
+    <color name="primary">#10B981</color>
+    <color name="primary_dark">#059669</color>
+    <color name="primary_light">#6EE7B7</color>
+    
+    <!-- Secondary Colors -->
+    <color name="secondary">#F59E0B</color>
+    <color name="secondary_dark">#D97706</color>
+    <color name="secondary_light">#FCD34D</color>
+    
+    <!-- Accent Colors -->
+    <color name="accent_red">#EF4444</color>
+    <color name="accent_blue">#3B82F6</color>
+    <color name="accent_purple">#A855F7</color>
+    
+    <!-- Gradient Colors -->
+    <color name="gradient_start">#10B981</color>
+    <color name="gradient_end">#34D399</color>
+    <color name="gradient_orange_start">#F59E0B</color>
+    <color name="gradient_orange_end">#FBBF24</color>
+    
+    <!-- Background Colors -->
+    <color name="background">#F9FAFB</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="text_hint">#9CA3AF</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    
+    <!-- Icon Colors -->
+    <color name="icon_primary">#6B7280</color>
+    <color name="icon_active">#10B981</color>
+    
+    <!-- Status Colors -->
+    <color name="success">#10B981</color>
+    <color name="warning">#F59E0B</color>
+    <color name="error">#EF4444</color>
+    <color name="info">#3B82F6</color>
+    
+    <!-- Legacy Colors (for backward compatibility) -->
+    <color name="endColor">#34D399</color>
+    <color name="startColor">#10B981</color>
+    <color name="iconColor">#6B7280</color>
+    <color name="textColor">#10B981</color>
 </resources>
