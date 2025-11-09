@@ -56,7 +56,13 @@ class MenuAdapter(
             val menuItem = menuItems[position]
             binding.apply {
                 menuFoodName.text = menuItem.foodName
-                menuPrice.text = menuItem.foodPrice
+                // Add $ to price if not already present
+                val priceText = menuItem.foodPrice
+                menuPrice.text = if (priceText?.contains("$") == true) {
+                    priceText
+                } else {
+                    "$$priceText"
+                }
                 val Uri = Uri.parse(menuItem.foodImage)
                 Glide.with(requireContext).load(Uri).into(menuImage)
             }
