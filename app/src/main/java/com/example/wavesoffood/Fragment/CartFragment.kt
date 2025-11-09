@@ -55,6 +55,12 @@ class CartFragment : Fragment() {
     }
 
     private fun getOrderedItemDetails() {
+        // Check if cart is empty
+        if (!::cartAdapter.isInitialized || cartAdapter.itemCount == 0) {
+            Toast.makeText(requireContext(), "Your cart is empty", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
         val orderIdReference: DatabaseReference = database.reference.child("user").child(userId).child("CartItems")
         val foodName = mutableListOf<String>()
         val foodPrice = mutableListOf<String>()
@@ -66,6 +72,10 @@ class CartFragment : Fragment() {
 
         orderIdReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                if (!snapshot.exists() || snapshot.childrenCount == 0L) {
+                    Toast.makeText(requireContext(), "Your cart is empty", Toast.LENGTH_SHORT).show()
+                    return
+                }
 
                 for (foodSnapshot in snapshot.children) {
                     //get the cartItems to respective List
@@ -77,6 +87,12 @@ class CartFragment : Fragment() {
                     orderItems?.foodImage?.let { foodImage.add(it) }
                     orderItems?.foodIngredients?.let { foodIngredient.add(it) }
                 }
+                
+                if (foodName.isEmpty()) {
+                    Toast.makeText(requireContext(), "No items to order", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                
                 oderNow(foodName, foodPrice, foodImage, foodDescription, foodIngredient, foodQuantities)
 
             }
@@ -124,25 +140,48 @@ class CartFragment : Fragment() {
         // FECTH DATA from the database
         foodReference.addListenerForSingleValueEvent(object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
+                // Clear lists first
+                foodNames.clear()
+                foodPrices.clear()
+                foodDescriptions.clear()
+                foodImagesUri.clear()
+                quantity.clear()
+                foodIngredients.clear()
+                
                 for(foodSnapshot in snapshot.children){
                     //get the cartitems object from the child node
                     val cartItems = foodSnapshot.getValue(CartItems::class.java)
 
-                    //addcart items details to the list
-                    cartItems?.foodName?.let { foodNames.add(it) }
-                    cartItems?.foodPrice?.let { foodPrices.add(it) }
-                    cartItems?.foodDescription?.let { foodDescriptions.add(it) }
-                    cartItems?.foodImage?.let { foodImagesUri.add(it) }
-                    cartItems?.foodQuantity?.let { quantity.add(it) }
-                    cartItems?.foodIngredients?.let { foodIngredients.add(it) }
+                    //addcart items details to the list - ensure all fields are added or use defaults
+                    if (cartItems != null) {
+                        foodNames.add(cartItems.foodName ?: "Unknown")
+                        foodPrices.add(cartItems.foodPrice ?: "$0")
+                        foodDescriptions.add(cartItems.foodDescription ?: "")
+                        foodImagesUri.add(cartItems.foodImage ?: "")
+                        quantity.add(cartItems.foodQuantity ?: 1)
+                        foodIngredients.add(cartItems.foodIngredients ?: "")
+                    }
                 }
+                
+                android.util.Log.d("CART_FRAGMENT", "Loaded ${foodNames.size} cart items")
+                android.util.Log.d("CART_FRAGMENT", "List sizes - Names:${foodNames.size}, Prices:${foodPrices.size}, Desc:${foodDescriptions.size}, Images:${foodImagesUri.size}, Qty:${quantity.size}, Ing:${foodIngredients.size}")
                 setAdapter()
-
-
-
             }
 
             private fun setAdapter() {
+                // Check if lists are properly populated
+                if (foodNames.isEmpty()) {
+                    android.util.Log.d("CART_FRAGMENT", "Cart is empty, clearing adapter")
+                    binding.cartRecyclerView.adapter = null
+                    // Optionally show empty state message
+                    Toast.makeText(context, "Your cart is empty", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                
+                // Log sizes for debugging - but don't fail if they mismatch slightly
+                // (we handle missing data with defaults now)
+                android.util.Log.d("CART_FRAGMENT", "Creating adapter with ${foodNames.size} items")
+                
                 cartAdapter = CartAdapter(
                     requireContext(),
                     foodNames,

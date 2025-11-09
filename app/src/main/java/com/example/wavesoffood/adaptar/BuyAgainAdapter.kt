@@ -48,14 +48,24 @@ class BuyAgainAdapter(
             val uri = Uri.parse(uriString)
             Glide.with(requireContext).load(uri).into(binding.buyAgainFoodImage)
 
-            // Click listener to add item back to cart
+            // Click listener for the "Buy Again" button
+            binding.buyAgainFoodButton.setOnClickListener {
+                addToCart(foodName, foodPrice, foodImage, foodQuantity)
+            }
+            
+            // Optional: Click on whole item also adds to cart
             binding.root.setOnClickListener {
                 addToCart(foodName, foodPrice, foodImage, foodQuantity)
             }
         }
 
         private fun addToCart(foodName: String, foodPrice: String, foodImage: String, foodQuantity: Int) {
-            val userId = auth.currentUser?.uid ?: return
+            val userId = auth.currentUser?.uid ?: run {
+                Toast.makeText(requireContext, "⚠️ Please login first", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            android.util.Log.d("BUY_AGAIN", "🛒 Adding to cart: $foodName (qty: $foodQuantity)")
 
             // Create a cart item with quantity from the original order
             val cartItem = CartItems(
@@ -75,13 +85,16 @@ class BuyAgainAdapter(
                 .push()
                 .setValue(cartItem)
                 .addOnSuccessListener {
+                    android.util.Log.d("BUY_AGAIN", "✅ Successfully added to cart")
+                    val quantityText = if (foodQuantity > 1) " (x$foodQuantity)" else ""
                     Toast.makeText(
                         requireContext,
-                        "✅ $foodName added to cart!",
+                        "✅ $foodName$quantityText added to cart!",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                .addOnFailureListener {
+                .addOnFailureListener { e ->
+                    android.util.Log.e("BUY_AGAIN", "❌ Failed to add to cart: ${e.message}")
                     Toast.makeText(
                         requireContext,
                         "❌ Failed to add to cart",

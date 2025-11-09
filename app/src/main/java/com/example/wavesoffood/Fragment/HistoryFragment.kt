@@ -81,23 +81,13 @@ class HistoryFragment : Fragment() {
             return
         }
         
+        Log.d("ORDER_STATUS", "🔘 User clicked Received button for order: $itemPushKey")
+        
         // Disable button to prevent multiple clicks
         binding.receivedButton.isEnabled = false
         
-        // Update in CompleteOrder (your Firebase node name)
-        val completeOrderReference = database.reference
-            .child("CompleteOrder")
-            .child(itemPushKey)
-        
-        completeOrderReference.child("paymentReceived").setValue(true)
-            .addOnSuccessListener {
-                // Also update in user's BuyHistory
-                updateUserBuyHistory(itemPushKey)
-            }
-            .addOnFailureListener { exception ->
-                showToast("Failed to update order: ${exception.message}")
-                binding.receivedButton.isEnabled = true
-            }
+        // Update Firebase - this will handle both BuyHistory and CompleteOrder
+        updateUserBuyHistory(itemPushKey)
     }
     
     private fun updateUserBuyHistory(itemPushKey: String) {
@@ -107,20 +97,83 @@ class HistoryFragment : Fragment() {
             .child("BuyHistory")
             .child(itemPushKey)
         
+        Log.d("ORDER_STATUS", "💾 Updating BuyHistory/$itemPushKey with paymentReceived=true")
+        
         userOrderReference.child("paymentReceived").setValue(true)
             .addOnSuccessListener {
-                // Update local data
-                listOfOrderItem.firstOrNull()?.paymentReceived = true
+                Log.d("ORDER_STATUS", "✅ Firebase BuyHistory updated successfully")
                 
-                // Update UI
-                updateReceivedUI()
-                
-                showToast("Order marked as received!")
+                // Now update CompleteOrder to ensure sync
+                database.reference
+                    .child("CompleteOrder")
+                    .child(itemPushKey)
+                    .child("paymentReceived")
+                    .setValue(true)
+                    .addOnSuccessListener {
+                        Log.d("ORDER_STATUS", "✅ Firebase CompleteOrder updated successfully")
+                        
+                        // Only update local UI after Firebase confirms both updates
+                        updateLocalDataAndUI()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("ORDER_STATUS", "❌ Failed to update CompleteOrder: ${e.message}")
+                        // Still update UI since BuyHistory was successful
+                        updateLocalDataAndUI()
+                    }
             }
             .addOnFailureListener { exception ->
+                Log.e("ORDER_STATUS", "❌ Failed to update BuyHistory: ${exception.message}")
                 showToast("Failed to update history: ${exception.message}")
                 binding.receivedButton.isEnabled = true
             }
+    }
+    
+    private fun updateLocalDataAndUI() {
+        Log.d("ORDER_STATUS", "🎨 Updating local data and UI")
+        
+        // Update local data
+        val receivedOrder = listOfOrderItem.firstOrNull()
+        receivedOrder?.paymentReceived = true
+        
+        // Remove from Recent Buy (first position) and move to Previously Buy
+        if (receivedOrder != null) {
+            listOfOrderItem.removeAt(0)
+            // Add to the end or keep in list (it will show in Previously Buy RecyclerView)
+            listOfOrderItem.add(receivedOrder)
+        }
+        
+        // Refresh UI - this will update both Recent Buy and Previously Buy sections
+        refreshHistoryUI()
+        
+        showToast("✅ Order received and moved to Previously Buy!")
+        
+        // Re-enable button for next order (if any)
+        binding.receivedButton.isEnabled = true
+    }
+    
+    private fun refreshHistoryUI() {
+        // Check if there are still orders
+        if (listOfOrderItem.isEmpty()) {
+            // No orders at all - hide Recent Buy section
+            binding.recentbuyitem.visibility = View.GONE
+            binding.receivedButton.visibility = View.GONE
+            showToast("No orders in history")
+            return
+        }
+        
+        // Check first item to see if it should be shown as Recent Buy
+        val firstOrder = listOfOrderItem.firstOrNull()
+        if (firstOrder != null && !firstOrder.paymentReceived) {
+            // There's an active order (not yet received) - show as Recent Buy
+            setDataInRecentBuyItem()
+        } else {
+            // All orders are received - hide Recent Buy section
+            binding.recentbuyitem.visibility = View.GONE
+            binding.receivedButton.visibility = View.GONE
+        }
+        
+        // Always refresh Previously Buy list
+        setPreviousBuyItemsRecyclerView()
     }
     
     private fun updateReceivedUI() {
@@ -211,24 +264,41 @@ class HistoryFragment : Fragment() {
 
         shortingQuery.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                listOfOrderItem.clear() // Clear old data first
+                Log.d("ORDER_STATUS", "📚 Loading BuyHistory - total orders: ${snapshot.childrenCount}")
+                
                 for (buySnapshot in snapshot.children) {
                     val buyHistoryItem = buySnapshot.getValue(OrderDetails::class.java)
                     buyHistoryItem?.let {
+                        Log.d("ORDER_STATUS", "📦 Order ${it.itemPushKey}: orderAccepted=${it.orderAccepted}, paymentReceived=${it.paymentReceived}")
+                        
                         // Ensure paymentReceived field exists (for old data compatibility)
                         if (!buySnapshot.hasChild("paymentReceived")) {
-                            Log.d("ORDER_STATUS", "Missing paymentReceived field, setting to false for order: ${it.itemPushKey}")
+                            Log.d("ORDER_STATUS", "⚠️ Missing paymentReceived field, setting to false for order: ${it.itemPushKey}")
                             // Initialize missing field
                             buySnapshot.ref.child("paymentReceived").setValue(false)
+                            it.paymentReceived = false
                         }
+                        // Add the item as read from user's BuyHistory
                         listOfOrderItem.add(it)
                     }
                 }
                 listOfOrderItem.reverse()
+                
+                Log.d("ORDER_STATUS", "📋 After loading: ${listOfOrderItem.size} orders in list")
+                if (listOfOrderItem.isNotEmpty()) {
+                    Log.d("ORDER_STATUS", "🔝 First order: ${listOfOrderItem[0].itemPushKey}, paymentReceived=${listOfOrderItem[0].paymentReceived}")
+                }
+                
                 if (listOfOrderItem.isNotEmpty()){
-                    //display the most recent order details
-                    setDataInRecentBuyItem()
-                    //setup recycler view with previous order details
-                    setPreviousBuyItemsRecyclerView()
+                    // Before showing UI, try to sync the latest acceptance/payment status
+                    // from the central CompleteOrder node (Admin may update there).
+                    val recent = listOfOrderItem[0]
+                    syncCompleteOrderStatusFor(recent) {
+                        // After syncing, update UI and previous items list
+                        setDataInRecentBuyItem()
+                        setPreviousBuyItemsRecyclerView()
+                    }
                 }
             }
             override fun onCancelled(error: DatabaseError) {
@@ -239,6 +309,73 @@ class HistoryFragment : Fragment() {
 
 
 
+    }
+
+    /**
+     * Syncs the latest orderAccepted/paymentReceived flags from
+     * CompleteOrder/{itemPushKey} into the provided OrderDetails instance.
+     * Calls onComplete() when done (success or failure) so the UI can refresh.
+     * 
+     * Priority: BuyHistory (already loaded) is the source of truth for paymentReceived.
+     * We only sync orderAccepted from CompleteOrder (Admin updates).
+     */
+    private fun syncCompleteOrderStatusFor(item: OrderDetails, onComplete: () -> Unit) {
+        val key = item.itemPushKey
+        if (key.isNullOrEmpty()) {
+            Log.w("ORDER_STATUS", "Cannot sync - itemPushKey is null or empty")
+            onComplete()
+            return
+        }
+
+        Log.d("ORDER_STATUS", "🔄 Syncing order status from CompleteOrder/$key")
+        Log.d("ORDER_STATUS", "📦 Before sync - orderAccepted: ${item.orderAccepted}, paymentReceived: ${item.paymentReceived}")
+
+        database.reference.child("CompleteOrder").child(key).get()
+            .addOnSuccessListener { snap ->
+                if (snap.exists()) {
+                    val accepted = snap.child("orderAccepted").getValue(Boolean::class.java)
+                    val payment = snap.child("paymentReceived").getValue(Boolean::class.java)
+                    
+                    Log.d("ORDER_STATUS", "✅ CompleteOrder data found - orderAccepted: $accepted, paymentReceived: $payment")
+                    
+                    // Only update orderAccepted from CompleteOrder (Admin's responsibility)
+                    if (accepted != null) {
+                        item.orderAccepted = accepted
+                    }
+                    
+                    // For paymentReceived, trust what's already in BuyHistory
+                    // (User app is the one that updates this field)
+                    // Only sync if BuyHistory doesn't have it yet
+                    if (item.paymentReceived == false && payment == true) {
+                        Log.d("ORDER_STATUS", "⚠️ CompleteOrder shows received but BuyHistory doesn't - syncing")
+                        item.paymentReceived = payment
+                    }
+                    
+                    Log.d("ORDER_STATUS", "📦 After sync - orderAccepted: ${item.orderAccepted}, paymentReceived: ${item.paymentReceived}")
+
+                    // Only update BuyHistory with orderAccepted (not paymentReceived)
+                    // because paymentReceived is managed by user app
+                    if (accepted != null && accepted != item.orderAccepted) {
+                        val userOrderRef = database.reference.child("user").child(userId).child("BuyHistory").child(key)
+                        Log.d("ORDER_STATUS", "💾 Syncing orderAccepted to BuyHistory: $accepted")
+                        userOrderRef.child("orderAccepted").setValue(accepted)
+                            .addOnSuccessListener { 
+                                Log.d("ORDER_STATUS", "✅ BuyHistory orderAccepted synced")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("ORDER_STATUS", "❌ Failed to sync BuyHistory: ${e.message}")
+                            }
+                    }
+                } else {
+                    Log.w("ORDER_STATUS", "⚠️ CompleteOrder/$key does not exist yet")
+                }
+                onComplete()
+            }
+            .addOnFailureListener {
+                // If sync fails, still proceed to show whatever we have
+                Log.e("ORDER_STATUS", "❌ Failed to fetch CompleteOrder/$key: ${it.message}")
+                onComplete()
+            }
     }
     private fun setDataInRecentBuyItem() {
         binding.recentbuyitem.visibility = View.VISIBLE
@@ -254,22 +391,25 @@ class HistoryFragment : Fragment() {
                 val isOrderIsAccepted = listOfOrderItem[0].orderAccepted
                 val isPaymentReceived = listOfOrderItem[0].paymentReceived
                 
-                Log.d("ORDER_STATUS", "Order Accepted: $isOrderIsAccepted, Payment Received: $isPaymentReceived")
+                Log.d("ORDER_STATUS", "🎨 UI Update - Order Accepted: $isOrderIsAccepted, Payment Received: $isPaymentReceived")
                 
                 // Update UI based on order status
                 when {
                     isPaymentReceived -> {
                         // Order has been received - show green status, hide button
+                        Log.d("ORDER_STATUS", "✅ Status: RECEIVED - showing green, hiding button")
                         orderStatus.background.setTint(Color.parseColor("#4CAF50")) // Green
                         receivedButton.visibility = View.GONE
                     }
                     isOrderIsAccepted -> {
                         // Order is accepted but not received yet - show orange/yellow status, show button
+                        Log.d("ORDER_STATUS", "📦 Status: DISPATCHED - showing orange, SHOWING BUTTON")
                         orderStatus.background.setTint(Color.parseColor("#FFA726")) // Orange
                         receivedButton.visibility = View.VISIBLE
                     }
                     else -> {
                         // Order is pending - show gray status, hide button
+                        Log.d("ORDER_STATUS", "⏳ Status: PENDING - showing gray, hiding button")
                         orderStatus.background.setTint(Color.parseColor("#C6C6C6")) // Gray
                         receivedButton.visibility = View.GONE
                     }
@@ -285,7 +425,18 @@ class HistoryFragment : Fragment() {
         val buyAgainFoodImage = mutableListOf<String>()
         val buyAgainFoodQuantity = mutableListOf<Int>()
         
-        for (i in 1 until listOfOrderItem.size) {
+        // Determine starting index based on whether first item is Recent Buy or not
+        val startIndex = if (listOfOrderItem.firstOrNull()?.paymentReceived == false) {
+            // First item is active/Recent Buy, so Previously Buy starts from index 1
+            1
+        } else {
+            // All items are received, start from index 0
+            0
+        }
+        
+        Log.d("ORDER_STATUS", "📋 Setting up Previously Buy RecyclerView, startIndex: $startIndex, total items: ${listOfOrderItem.size}")
+        
+        for (i in startIndex until listOfOrderItem.size) {
             listOfOrderItem[i].foodNames?.firstOrNull()?.let {
                 buyAgainFoodName.add(it)
                 listOfOrderItem[i].foodPrices?.firstOrNull()?.let {
@@ -300,6 +451,8 @@ class HistoryFragment : Fragment() {
             }
         }
         
+        Log.d("ORDER_STATUS", "📋 Previously Buy items count: ${buyAgainFoodName.size}")
+        
         if (buyAgainFoodName.isNotEmpty()) {
             val rv = binding.buyAgainRecyclerView
             rv.layoutManager = LinearLayoutManager(requireContext())
@@ -311,6 +464,9 @@ class HistoryFragment : Fragment() {
                 requireContext()
             )
             rv.adapter = buyAgainAdapter
+        } else {
+            // Clear the adapter if no items
+            binding.buyAgainRecyclerView.adapter = null
         }
     }
 }
