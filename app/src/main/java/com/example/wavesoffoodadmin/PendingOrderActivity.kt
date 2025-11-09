@@ -218,12 +218,23 @@ class PendingOrderActivity : AppCompatActivity(), PendingOrderAdapter.OnItemClic
             return
         }
         
-        // Step 1: Copy to CompleteOrder
+        // Set orderAccepted to true before dispatching
+        order.orderAccepted = true
+        Log.d(TAG, "✅ Set orderAccepted = true before dispatch")
+        
+        // Step 1: Update AcceptedOrder in OrderDetails (if not already set)
+        val orderDetailsRef = database.reference.child("OrderDetails").child(dispatchItemPushKey)
+        orderDetailsRef.child("AcceptedOrder").setValue(true)
+            .addOnSuccessListener {
+                Log.d(TAG, "✅ AcceptedOrder set to true in OrderDetails")
+            }
+        
+        // Step 2: Copy to CompleteOrder with orderAccepted = true
         val dispatchItemOrderReference = database.reference.child("CompleteOrder").child(dispatchItemPushKey)
         dispatchItemOrderReference.setValue(order)
             .addOnSuccessListener {
-                Log.d(TAG, "✅ Order copied to CompleteOrder successfully")
-                // Step 2: Delete from OrderDetails
+                Log.d(TAG, "✅ Order copied to CompleteOrder with orderAccepted = true")
+                // Step 3: Delete from OrderDetails
                 deleteThisItemFromOrderDetails(dispatchItemPushKey, orderPrice)
             }
             .addOnFailureListener { e ->

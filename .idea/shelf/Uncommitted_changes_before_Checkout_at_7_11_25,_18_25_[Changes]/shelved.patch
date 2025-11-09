@@ -1,0 +1,54 @@
+Index: .idea/deploymentTargetSelector.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+deleted file mode 100644
+--- a/.idea/deploymentTargetSelector.xml	(revision c0a4af6c4129d03108ceaddd03fd1a0ed1ab5b5b)
++++ /dev/null	(revision c0a4af6c4129d03108ceaddd03fd1a0ed1ab5b5b)
+@@ -1,10 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="deploymentTargetSelector">
+-    <selectionStates>
+-      <SelectionState runConfigName="app">
+-        <option name="selectionMode" value="DROPDOWN" />
+-      </SelectionState>
+-    </selectionStates>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .gradle/config.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#Mon Nov 03 10:12:30 ICT 2025\njava.home=C\\:\\\\Program Files\\\\Android\\\\Android Studio\\\\jbr\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/.gradle/config.properties b/.gradle/config.properties
+--- a/.gradle/config.properties	(revision c0a4af6c4129d03108ceaddd03fd1a0ed1ab5b5b)
++++ b/.gradle/config.properties	(date 1762487688628)
+@@ -1,2 +1,2 @@
+-#Mon Nov 03 10:12:30 ICT 2025
+-java.home=C\:\\Program Files\\Android\\Android Studio\\jbr
++#Fri Nov 07 10:54:48 ICT 2025
++java.home=/Applications/Android Studio.app/Contents/jbr/Contents/Home
+Index: local.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>## This file must *NOT* be checked into Version Control Systems,\n# as it contains information specific to your local configuration.\n#\n# Location of the SDK. This is only used by Gradle.\n# For customization when using a Version Control System, please read the\n# header note.\n#Tue Oct 28 21:27:44 ICT 2025\nsdk.dir=C\\:\\\\Users\\\\Admin\\\\AppData\\\\Local\\\\Android\\\\Sdk\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/local.properties b/local.properties
+--- a/local.properties	(revision c0a4af6c4129d03108ceaddd03fd1a0ed1ab5b5b)
++++ b/local.properties	(date 1762487690825)
+@@ -4,5 +4,5 @@
+ # Location of the SDK. This is only used by Gradle.
+ # For customization when using a Version Control System, please read the
+ # header note.
+-#Tue Oct 28 21:27:44 ICT 2025
+-sdk.dir=C\:\\Users\\Admin\\AppData\\Local\\Android\\Sdk
++#Fri Nov 07 10:54:50 ICT 2025
++sdk.dir=/Users/hadi/Library/Android/sdk

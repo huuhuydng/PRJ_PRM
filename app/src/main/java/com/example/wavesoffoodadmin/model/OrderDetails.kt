@@ -19,7 +19,13 @@ class OrderDetails() : Serializable {
     var address: String? = null
     var totalPrice: String? = null
     var phoneNumber: String? = null
+    
+    // Map "AcceptedOrder" from Firebase to "orderAccepted" property in code
+    @PropertyName("AcceptedOrder")
     var orderAccepted: Boolean = false
+    
+    // Map "PaymentReceived" from Firebase to "paymentReceived" property in code
+    @PropertyName("PaymentReceived")
     var paymentReceived: Boolean = false
     var itemPushKey: String? = null
     var currentTime: Long = 0
