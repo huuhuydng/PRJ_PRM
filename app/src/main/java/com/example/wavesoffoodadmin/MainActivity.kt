@@ -188,8 +188,16 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onResume() {
         super.onResume()
+        Log.d(TAG, "========================================")
+        Log.d(TAG, "📱 onResume: MainActivity is resuming...")
+        Log.d(TAG, "========================================")
+        
+        // Check user authentication
         checkUserAuthentication()
-        // Refresh statistics when activity resumes
+        
+        // Force refresh statistics when returning to MainActivity
+        // This ensures we get the latest data from Firebase
+        Log.d(TAG, "🔄 Triggering force refresh of statistics...")
         refreshStatistics()
     }
     
@@ -200,7 +208,10 @@ class MainActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
         if (currentUser == null) {
             // User is not authenticated, redirect to login
+            Log.w(TAG, "⚠️ User not authenticated - redirecting to login")
             navigateToLogin()
+        } else {
+            Log.d(TAG, "✅ User authenticated: ${currentUser.email ?: currentUser.uid}")
         }
     }
     
@@ -210,15 +221,17 @@ class MainActivity : AppCompatActivity() {
     private fun loadPendingOrdersCount() {
         val pendingOrdersRef = databaseReference.child("OrderDetails")
         
+        Log.d(TAG, "📊 Setting up real-time listener: Pending Orders")
+        
         pendingOrdersListener = pendingOrdersRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val count = snapshot.childrenCount.toInt()
                 binding.textView3.text = count.toString()
-                Log.d(TAG, "Pending orders count updated: $count")
+                Log.d(TAG, "🔄 REAL-TIME UPDATE: Pending Orders = $count")
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e(TAG, "Error loading pending orders: ${error.message}")
+                Log.e(TAG, "❌ Error loading pending orders: ${error.message}")
                 binding.textView3.text = "0"
             }
         })
@@ -230,15 +243,17 @@ class MainActivity : AppCompatActivity() {
     private fun loadCompletedOrdersCount() {
         val completedOrdersRef = databaseReference.child("CompleteOrder")
         
+        Log.d(TAG, "📊 Setting up real-time listener: Completed Orders")
+        
         completedOrdersListener = completedOrdersRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val count = snapshot.childrenCount.toInt()
                 binding.textView5.text = count.toString()
-                Log.d(TAG, "Completed orders count updated: $count")
+                Log.d(TAG, "🔄 REAL-TIME UPDATE: Completed Orders = $count")
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e(TAG, "Error loading completed orders: ${error.message}")
+                Log.e(TAG, "❌ Error loading completed orders: ${error.message}")
                 binding.textView5.text = "0"
             }
         })
@@ -251,9 +266,12 @@ class MainActivity : AppCompatActivity() {
     private fun loadTotalEarnings() {
         val completeOrderRef = databaseReference.child("CompleteOrder")
         
+        Log.d(TAG, "📊 Setting up real-time listener: Total Earnings")
+        
         earningsListener = completeOrderRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var totalEarnings = 0.0
+                var orderCount = 0
                 
                 for (orderSnapshot in snapshot.children) {
                     val totalPrice = orderSnapshot.child("totalPrice").getValue(String::class.java)
@@ -261,20 +279,27 @@ class MainActivity : AppCompatActivity() {
                         // Parse price: supports "150$", "1,500$", "$100", "50"
                         val price = parsePrice(it)
                         totalEarnings += price
+                        orderCount++
                         
-                        // Log individual order price for debugging
-                        Log.d(TAG, "Order price: $it → $price")
+                        // Log individual order price for debugging (only first 5)
+                        if (orderCount <= 5) {
+                            Log.d(TAG, "   Order #$orderCount: $it → \$$price")
+                        }
                     }
+                }
+                
+                if (orderCount > 5) {
+                    Log.d(TAG, "   ... and ${orderCount - 5} more orders")
                 }
                 
                 // Format total earnings with $ sign
                 val formattedEarnings = String.format("%.0f$", totalEarnings)
                 binding.textView7.text = formattedEarnings
-                Log.d(TAG, "Total earnings updated: $formattedEarnings")
+                Log.d(TAG, "🔄 REAL-TIME UPDATE: Total Earnings = $formattedEarnings (from $orderCount orders)")
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e(TAG, "Error loading total earnings: ${error.message}")
+                Log.e(TAG, "❌ Error loading total earnings: ${error.message}")
                 binding.textView7.text = "0$"
             }
         })
@@ -300,36 +325,68 @@ class MainActivity : AppCompatActivity() {
     }
     
     /**
-     * Force refresh statistics by removing and re-adding listeners
+     * Force refresh statistics by reading directly from Firebase
+     * This ensures we get the latest data when returning to MainActivity
      */
     private fun refreshStatistics() {
-        Log.d(TAG, "refreshStatistics: Force refreshing all statistics...")
+        Log.d(TAG, "========== FORCE REFRESH START ==========")
+        Log.d(TAG, "🔄 Force refreshing all statistics from Firebase...")
         
-        // Force update by getting current values
-        databaseReference.child("OrderDetails").get().addOnSuccessListener { snapshot ->
-            val count = snapshot.childrenCount.toInt()
-            binding.textView3.text = count.toString()
-            Log.d(TAG, "Force refresh - Pending orders: $count")
-        }
-        
-        databaseReference.child("CompleteOrder").get().addOnSuccessListener { snapshot ->
-            val count = snapshot.childrenCount.toInt()
-            binding.textView5.text = count.toString()
-            Log.d(TAG, "Force refresh - Completed orders: $count")
-            
-            // Calculate total earnings
-            var totalEarnings = 0.0
-            for (orderSnapshot in snapshot.children) {
-                val totalPrice = orderSnapshot.child("totalPrice").getValue(String::class.java)
-                totalPrice?.let {
-                    val price = parsePrice(it)
-                    totalEarnings += price
-                }
+        // Force read Pending Orders directly from Firebase
+        databaseReference.child("OrderDetails").get()
+            .addOnSuccessListener { snapshot ->
+                val count = snapshot.childrenCount.toInt()
+                binding.textView3.text = count.toString()
+                Log.d(TAG, "✅ Force refresh SUCCESS - Pending Orders: $count")
+                Log.d(TAG, "   → Updated textView3 with new count")
             }
-            val formattedEarnings = String.format("%.0f$", totalEarnings)
-            binding.textView7.text = formattedEarnings
-            Log.d(TAG, "Force refresh - Total earnings: $formattedEarnings")
-        }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "❌ Force refresh FAILED - Pending Orders: ${e.message}")
+            }
+        
+        // Force read Completed Orders directly from Firebase
+        databaseReference.child("CompleteOrder").get()
+            .addOnSuccessListener { snapshot ->
+                val count = snapshot.childrenCount.toInt()
+                binding.textView5.text = count.toString()
+                Log.d(TAG, "✅ Force refresh SUCCESS - Completed Orders: $count")
+                Log.d(TAG, "   → Updated textView5 with new count")
+                
+                // Calculate total earnings while we have the snapshot
+                var totalEarnings = 0.0
+                var orderCount = 0
+                
+                Log.d(TAG, "💰 Calculating total earnings from $count completed orders...")
+                
+                for (orderSnapshot in snapshot.children) {
+                    val totalPrice = orderSnapshot.child("totalPrice").getValue(String::class.java)
+                    totalPrice?.let {
+                        val price = parsePrice(it)
+                        totalEarnings += price
+                        orderCount++
+                        
+                        // Log first 3 orders for debugging
+                        if (orderCount <= 3) {
+                            Log.d(TAG, "   Order #$orderCount: $it → \$$price")
+                        }
+                    }
+                }
+                
+                if (orderCount > 3) {
+                    Log.d(TAG, "   ... and ${orderCount - 3} more orders")
+                }
+                
+                val formattedEarnings = String.format("%.0f$", totalEarnings)
+                binding.textView7.text = formattedEarnings
+                Log.d(TAG, "✅ Force refresh SUCCESS - Total Earnings: $formattedEarnings")
+                Log.d(TAG, "   → Calculated from $orderCount orders")
+                Log.d(TAG, "   → Updated textView7 with new total")
+                Log.d(TAG, "========== FORCE REFRESH COMPLETE ==========")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "❌ Force refresh FAILED - Completed Orders: ${e.message}")
+                Log.e(TAG, "========== FORCE REFRESH FAILED ==========")
+            }
     }
     
     /**

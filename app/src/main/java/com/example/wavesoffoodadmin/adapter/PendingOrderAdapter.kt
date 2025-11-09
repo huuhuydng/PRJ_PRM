@@ -8,12 +8,14 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.wavesoffoodadmin.databinding.PendingOrdersBinding
+import com.example.wavesoffoodadmin.model.OrderDetails
 
 class PendingOrderAdapter(
     private val context: Context,
     private val customerNames: MutableList<String>,
     private val quantity: MutableList<String>,
     private val foodImage: MutableList<String>,
+    private val orderDetailsList: MutableList<OrderDetails>,
     private val itemClicked: OnItemClicked
 ) : RecyclerView.Adapter<PendingOrderAdapter.PendingOrderViewHolder>() {
     interface OnItemClicked {
@@ -35,7 +37,7 @@ class PendingOrderAdapter(
 
     inner class PendingOrderViewHolder(private val binding: PendingOrdersBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        private var isAccepted = false
+        
         fun bind(position: Int) {
             binding.apply {
                 customerName.text = customerNames[position]
@@ -44,23 +46,25 @@ class PendingOrderAdapter(
                 var uri = Uri.parse(uriString)
                 Glide.with(context).load(uri).into(orderedFoodImage)
 
+                // Check if order is already accepted from OrderDetails data
+                val isAccepted = orderDetailsList[position].orderAccepted
+                
                 orderedAcceptButton.apply {
-                    if (!isAccepted) {
-                        text = "Accept"
-                    } else {
-                        text = "Dispatch"
-                    }
+                    // Set button text based on order status
+                    text = if (isAccepted) "Dispatch" else "Accept"
+                    
                     setOnClickListener {
                         if (!isAccepted) {
-                            text = "Dispatch"
-                            isAccepted = true
+                            // First click: Accept order
                             showToast("Order is accepted")
                             itemClicked.onItemAcceptClickListener(position)
+                            
+                            // Update local data and UI
+                            orderDetailsList[position].orderAccepted = true
+                            notifyItemChanged(position)
                         } else {
-                            // Dispatch order - Firebase listener will handle removal automatically
-                            // Don't remove locally to avoid conflicts with real-time updates
+                            // Second click: Dispatch order
                             showToast("Dispatching order...")
-                            // Call the correct dispatch function!
                             itemClicked.onItemDispatchClickListener(position)
                         }
                     }

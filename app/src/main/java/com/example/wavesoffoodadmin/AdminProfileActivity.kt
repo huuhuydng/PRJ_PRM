@@ -60,26 +60,57 @@ class AdminProfileActivity : AppCompatActivity() {
             toggleEditMode()
         }
         
-        // Find save button by text (since it doesn't have an ID in layout)
-        // We'll need to add an ID or use findViewById with parent
-        // For now, let's add click listener to the button
-        // Note: The save button in layout doesn't have an ID, so we need to find it
-        // Let's use a different approach - add the button programmatically or update layout
-        // For now, I'll add a save button click listener using the parent layout
+        binding.saveButton.setOnClickListener {
+            saveAdminProfile()
+        }
     }
     
     /**
-     * Toggle edit mode
+     * Enable edit mode
+     */
+    private fun enableEditMode() {
+        Log.d(TAG, "Enabling edit mode")
+        isEditMode = true
+        setFieldsEditable(true)
+        updateEditButton()
+        binding.name.requestFocus()
+        Toast.makeText(this, "Edit mode enabled", Toast.LENGTH_SHORT).show()
+    }
+    
+    /**
+     * Disable edit mode
+     */
+    private fun disableEditMode() {
+        Log.d(TAG, "Disabling edit mode")
+        isEditMode = false
+        setFieldsEditable(false)
+        updateEditButton()
+    }
+    
+    /**
+     * Update edit button appearance based on edit mode
+     */
+    private fun updateEditButton() {
+        if (isEditMode) {
+            binding.editButton.text = "Cancel"
+            binding.editButton.setTextColor(getColor(R.color.error))
+        } else {
+            binding.editButton.text = "Edit"
+            binding.editButton.setTextColor(getColor(R.color.black))
+        }
+    }
+    
+    /**
+     * Toggle edit mode (deprecated - keeping for compatibility)
      */
     private fun toggleEditMode() {
         if (isEditMode) {
-            // Exiting edit mode - save the profile
-            saveAdminProfile()
+            // Cancel edit mode
+            disableEditMode()
+            loadAdminProfile() // Reload original data
         } else {
-            // Entering edit mode
-            isEditMode = true
-            setFieldsEditable(true)
-            binding.name.requestFocus()
+            // Enable edit mode
+            enableEditMode()
         }
     }
     
@@ -211,26 +242,25 @@ class AdminProfileActivity : AppCompatActivity() {
                 if (email != currentUser.email) {
                     currentUser.updateEmail(email)
                         .addOnSuccessListener {
-                            Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show()
-                            isEditMode = false
-                            setFieldsEditable(false) // Exit edit mode
+                            Log.d(TAG, "Profile and email updated successfully")
+                            Toast.makeText(this, "✅ Profile updated successfully!", Toast.LENGTH_SHORT).show()
+                            disableEditMode() // Exit edit mode
                         }
                         .addOnFailureListener { e ->
                             Log.e(TAG, "Error updating email: ${e.message}")
-                            Toast.makeText(this, "Profile saved but email update failed", Toast.LENGTH_SHORT).show()
-                            isEditMode = false
-                            setFieldsEditable(false)
+                            Toast.makeText(this, "Profile saved but email update failed", Toast.LENGTH_LONG).show()
+                            disableEditMode()
                         }
                 } else {
-                    Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show()
-                    isEditMode = false
-                    setFieldsEditable(false) // Exit edit mode
+                    Log.d(TAG, "Profile updated successfully")
+                    Toast.makeText(this, "✅ Profile updated successfully!", Toast.LENGTH_SHORT).show()
+                    disableEditMode() // Exit edit mode
                 }
             }
             .addOnFailureListener { e ->
                 hideProgressDialog()
                 Log.e(TAG, "Error saving profile: ${e.message}")
-                Toast.makeText(this, "Failed to save profile: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "❌ Failed to save profile: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
     
@@ -289,12 +319,14 @@ class AdminProfileActivity : AppCompatActivity() {
     }
     
     /**
-     * Override back button to handle save when in edit mode
+     * Override back button to handle cancel when in edit mode
      */
     override fun onBackPressed() {
         if (isEditMode) {
-            // Save before exiting
-            saveAdminProfile()
+            // Cancel edit mode without saving
+            disableEditMode()
+            loadAdminProfile() // Reload original data
+            Toast.makeText(this, "Changes discarded", Toast.LENGTH_SHORT).show()
         } else {
             super.onBackPressed()
         }
