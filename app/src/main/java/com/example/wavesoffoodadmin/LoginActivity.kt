@@ -78,8 +78,8 @@ class LoginActivity : AppCompatActivity() {
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                     auth.signInWithCredential(credential).addOnCompleteListener { authTask ->
                         if (authTask.isSuccessful) {
-                            Toast.makeText(this, "Sign in with Google SUCCESSFUL", Toast.LENGTH_SHORT).show()
-                            updateUi(authTask.result?.user)
+                            // Verify admin status before allowing access
+                            verifyAdminAndLogin(authTask.result?.user)
                         } else {
                             Toast.makeText(this, "Sign in with Google FAILED", Toast.LENGTH_SHORT).show()
                         }
@@ -94,22 +94,45 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val user: FirebaseUser? = auth.currentUser
-                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                updateUi(user)
+                // Verify user is admin before allowing login
+                verifyAdminAndLogin(user)
             } else {
-                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val user: FirebaseUser? = auth.currentUser
-                        Toast.makeText(this, "Create User & Login Successful", Toast.LENGTH_SHORT).show()
-                        saveUserData()
-                        updateUi(user)
-                    } else {
-                        Toast.makeText(this, "Authentication FAILED", Toast.LENGTH_SHORT).show()
-                        Log.d("Account", "createUserAccount: Authentication FAILED", task.exception)
-                    }
-                }
+                // Only allow creating new admin accounts, not regular users
+                Toast.makeText(this, "Login failed. Please contact admin to create an account.", Toast.LENGTH_LONG).show()
+                Log.d("Account", "Login failed: ${task.exception?.message}")
             }
         }
+    }
+    
+    /**
+     * Verify that the logged-in user exists in the admin node
+     */
+    private fun verifyAdminAndLogin(user: FirebaseUser?) {
+        if (user == null) {
+            Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        // Check if user exists in admin node
+        database.child("admin").child(user.uid).get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    // User is admin, allow login
+                    Log.d("Account", "✅ Admin verified: ${user.email}")
+                    Toast.makeText(this, "✅ Login successful", Toast.LENGTH_SHORT).show()
+                    updateUi(user)
+                } else {
+                    // User exists in Firebase Auth but not in admin node
+                    Log.w("Account", "⚠️ User ${user.email} is not an admin")
+                    Toast.makeText(this, "❌ Access denied. This account is not an admin.", Toast.LENGTH_LONG).show()
+                    auth.signOut() // Sign out non-admin user
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("Account", "Error checking admin status: ${e.message}")
+                Toast.makeText(this, "Error verifying admin status", Toast.LENGTH_SHORT).show()
+                auth.signOut()
+            }
     }
 
     private fun saveUserData() {
@@ -119,19 +142,37 @@ class LoginActivity : AppCompatActivity() {
         val user = UserModel(name = userName, email = email, password = password)
         val userId: String = FirebaseAuth.getInstance().currentUser!!.uid
 
+        // Save to "admin" node instead of "user" node
         userId?.let{
-            database.child("user").child(it).setValue(user)
+            database.child("admin").child(it).setValue(user)
         }
     }
 
-    // Check neu user da login thi chuyen sang main activity
+    // Check if user is already logged in and is an admin
     override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
-        if (currentUser!= null) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+        if (currentUser != null) {
+            // Verify admin status before auto-login
+            database.child("admin").child(currentUser.uid).get()
+                .addOnSuccessListener { snapshot ->
+                    if (snapshot.exists()) {
+                        // User is admin, proceed to main activity
+                        Log.d("Account", "✅ Auto-login: Admin verified")
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        // User is not admin, sign them out
+                        Log.w("Account", "⚠️ Auto-login blocked: User is not admin")
+                        auth.signOut()
+                        googleSignInClient.signOut()
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("Account", "Error checking admin status on start: ${e.message}")
+                    auth.signOut()
+                }
         }
     }
 

@@ -145,10 +145,10 @@ class AdminProfileActivity : AppCompatActivity() {
     }
     
     /**
-     * Load profile from "user" node in Firebase
+     * Load profile from "admin" node in Firebase
      */
     private fun loadFromUserNode(userId: String) {
-        databaseReference.child("user").child(userId)
+        databaseReference.child("admin").child(userId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     hideProgressDialog()
@@ -233,8 +233,8 @@ class AdminProfileActivity : AppCompatActivity() {
             phone = phone.ifEmpty { null }
         )
         
-        // Save to Firebase
-        databaseReference.child("user").child(userId).setValue(userModel)
+        // Save to Firebase admin node
+        databaseReference.child("admin").child(userId).setValue(userModel)
             .addOnSuccessListener {
                 hideProgressDialog()
                 

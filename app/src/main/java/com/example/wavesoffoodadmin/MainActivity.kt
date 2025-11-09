@@ -54,6 +54,10 @@ class MainActivity : AppCompatActivity() {
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions)
         
+        // Verify admin status before allowing access
+        // Must be called AFTER initializing database
+        verifyAdminAccess()
+        
         // Load real-time statistics
         loadPendingOrdersCount()
         loadCompletedOrdersCount()
@@ -199,6 +203,56 @@ class MainActivity : AppCompatActivity() {
         // This ensures we get the latest data from Firebase
         Log.d(TAG, "🔄 Triggering force refresh of statistics...")
         refreshStatistics()
+    }
+    
+    /**
+     * Verify that current user is an admin
+     * If not admin or not logged in, redirect to login
+     */
+    private fun verifyAdminAccess() {
+        val currentUser = auth.currentUser
+        
+        if (currentUser == null) {
+            Log.w(TAG, "⚠️ No user logged in - redirecting to login")
+            navigateToLogin()
+            return
+        }
+        
+        Log.d(TAG, "🔍 Verifying admin access for: ${currentUser.email}")
+        
+        // Check if user exists in admin node
+        databaseReference.child("admin").child(currentUser.uid).get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    Log.d(TAG, "✅ Admin verified: ${currentUser.email}")
+                    // User is admin, continue normal flow
+                } else {
+                    Log.w(TAG, "❌ ACCESS DENIED: User ${currentUser.email} is not an admin")
+                    Toast.makeText(
+                        this,
+                        "❌ Access denied. This account is not an admin.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    
+                    // Sign out and redirect to login
+                    auth.signOut()
+                    googleSignInClient.signOut().addOnCompleteListener {
+                        navigateToLogin()
+                    }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "❌ Error verifying admin status: ${e.message}")
+                Toast.makeText(
+                    this,
+                    "Error verifying admin access. Please try again.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                
+                // On error, sign out for security
+                auth.signOut()
+                navigateToLogin()
+            }
     }
     
     /**

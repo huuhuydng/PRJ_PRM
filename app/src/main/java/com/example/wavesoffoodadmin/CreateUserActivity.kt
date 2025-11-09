@@ -64,7 +64,7 @@ class CreateUserActivity : AppCompatActivity() {
             return
         }
         
-        showProgressDialog("Creating new admin user...")
+        showProgressDialog("Creating new admin...")
         
         // Create user with Firebase Auth
         auth.createUserWithEmailAndPassword(email, password)
@@ -72,23 +72,23 @@ class CreateUserActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = task.result?.user
                     user?.let {
-                        // Save user data to Firebase Database
+                        // Save admin data to Firebase Database
                         saveAdminUserData(it.uid, name, email, password)
                     } ?: run {
                         hideProgressDialog()
-                        Toast.makeText(this, "User creation failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Admin creation failed", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     hideProgressDialog()
                     val errorMessage = task.exception?.message ?: "Unknown error"
-                    Log.e(TAG, "Error creating user: $errorMessage")
-                    Toast.makeText(this, "Failed to create user: $errorMessage", Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, "Error creating admin: $errorMessage")
+                    Toast.makeText(this, "Failed to create admin: $errorMessage", Toast.LENGTH_SHORT).show()
                 }
             }
     }
     
     /**
-     * Save admin user data to Firebase Database
+     * Save admin user data to Firebase Database in "admin" node
      */
     private fun saveAdminUserData(userId: String, name: String, email: String, password: String) {
         val userModel = UserModel(
@@ -97,16 +97,18 @@ class CreateUserActivity : AppCompatActivity() {
             password = password
         )
         
-        databaseReference.child("user").child(userId).setValue(userModel)
+        // Save to "admin" node instead of "user" node
+        databaseReference.child("admin").child(userId).setValue(userModel)
             .addOnSuccessListener {
                 hideProgressDialog()
-                Toast.makeText(this, "Admin user created successfully", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, "✅ Admin created successfully: $email")
+                Toast.makeText(this, "✅ Admin created successfully!", Toast.LENGTH_SHORT).show()
                 clearInputFields()
             }
             .addOnFailureListener { e ->
                 hideProgressDialog()
-                Log.e(TAG, "Error saving user data: ${e.message}")
-                Toast.makeText(this, "User created but data save failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "❌ Error saving admin data: ${e.message}")
+                Toast.makeText(this, "Admin created but data save failed: ${e.message}", Toast.LENGTH_LONG).show()
                 // Still clear fields even if save failed
                 clearInputFields()
             }

@@ -52,6 +52,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent">
 
+            <!-- Guideline for horizontal spacing -->
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
                 android:layout_width="match_parent"
@@ -59,40 +60,44 @@
                 android:orientation="horizontal"
                 app:layout_constraintGuide_begin="8dp" />
 
+            <!-- Vertical guideline for left column (33.3%) -->
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
+                android:id="@+id/guideline_left"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="9dp" />
+                app:layout_constraintGuide_percent="0.33" />
 
+            <!-- Vertical guideline for right column (66.6%) -->
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline3"
+                android:id="@+id/guideline_right"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_end="8dp" />
+                app:layout_constraintGuide_percent="0.67" />
 
+            <!-- PENDING ORDERS SECTION -->
             <ImageView
                 android:id="@+id/imageView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/attantion"
-                app:layout_constraintEnd_toEndOf="@+id/pendingOrderTextView"
-                app:layout_constraintStart_toStartOf="@+id/pendingOrderTextView"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_left"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/guideline" />
 
             <TextView
                 android:id="@+id/pendingOrderTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
                 android:layout_marginTop="@dimen/spacing_sm"
-                android:text="Pending Orders"
+                android:text="Pending\nOrders"
+                android:textAlignment="center"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_size_sm"
                 android:fontFamily="@font/poppins_medium"
-                app:layout_constraintStart_toStartOf="@+id/guideline2"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_left"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <TextView
@@ -104,80 +109,84 @@
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_size_2xl"
                 android:fontFamily="@font/poppins_bold"
-                app:layout_constraintEnd_toEndOf="@+id/pendingOrderTextView"
-                app:layout_constraintStart_toStartOf="@+id/pendingOrderTextView"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_left"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pendingOrderTextView" />
 
+            <!-- COMPLETED ORDER SECTION -->
             <ImageView
                 android:id="@+id/imageView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/right"
-                app:layout_constraintEnd_toEndOf="@+id/textView6"
-                app:layout_constraintStart_toStartOf="@+id/textView6"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+                app:layout_constraintStart_toEndOf="@+id/guideline_left"
                 app:layout_constraintTop_toTopOf="@+id/guideline" />
 
             <TextView
                 android:id="@+id/textView6"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
                 android:layout_marginTop="@dimen/spacing_sm"
-                android:text="Completed\norder"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Completed\nOrders"
                 android:textAlignment="center"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_size_sm"
-                android:fontFamily="@font/poppins_medium"
-                app:layout_constraintEnd_toStartOf="@+id/textView8"
-                app:layout_constraintHorizontal_bias="0.159"
-                app:layout_constraintStart_toEndOf="@+id/pendingOrderTextView"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+                app:layout_constraintStart_toEndOf="@+id/guideline_left"
                 app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xs"
                 android:text="30"
                 android:textColor="@color/secondary"
                 android:textSize="@dimen/text_size_2xl"
                 android:fontFamily="@font/poppins_bold"
-                app:layout_constraintEnd_toEndOf="@+id/textView6"
-                app:layout_constraintStart_toStartOf="@+id/textView6"
+                app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+                app:layout_constraintStart_toEndOf="@+id/guideline_left"
                 app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
+            <!-- WHOLE TIME EARNING SECTION -->
+
+            <!-- WHOLE TIME EARNING SECTION -->
             <ImageView
                 android:id="@+id/imageView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/dollar"
-                app:layout_constraintEnd_toEndOf="@+id/textView8"
-                app:layout_constraintStart_toStartOf="@+id/textView8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/guideline_right"
                 app:layout_constraintTop_toTopOf="@+id/guideline" />
 
             <TextView
                 android:id="@+id/textView8"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_sm"
-                android:layout_marginEnd="@dimen/spacing_sm"
                 android:text="Whole Time\nEarning"
                 android:textAlignment="center"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_size_sm"
                 android:fontFamily="@font/poppins_medium"
-                app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/guideline_right"
                 app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
             <TextView
                 android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xs"
                 android:text="30$"
                 android:textColor="@color/success"
                 android:textSize="@dimen/text_size_2xl"
                 android:fontFamily="@font/poppins_bold"
-                app:layout_constraintEnd_toEndOf="@+id/textView8"
-                app:layout_constraintStart_toStartOf="@+id/textView8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/guideline_right"
                 app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -350,7 +359,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_sm"
-                android:text="Create new User"
+                android:text="Add New Admin"
                 android:textColor="@color/primary"
                 android:textSize="@dimen/text_size_base"
                 android:fontFamily="@font/poppins_semibold"
